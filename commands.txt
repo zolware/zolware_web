@@ -1,1 +1,1 @@
- source .env; ../node/bin/npm start
+ source .env; nodemon server.js --harmony_proxies

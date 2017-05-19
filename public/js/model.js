@@ -393,7 +393,7 @@ var saveModelDataSource = function(model_id, datasource_id) {
 		url: '/model/' + model_id + '/setdatasource/' + datasource_id,
 		dataType: "json",
 		async: true,
-		success: reloadPage
+		success: getModel
 	});
 };
 

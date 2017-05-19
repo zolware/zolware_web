@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="assets/ico/favicon.ico">
+
+    <title>Zolware</title>
+    <% include ./partials/headcommon %>
+    <!-- Custom styles for this template -->
+    <link href="/static/css/style.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="/static/css/project.css">
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <% include ./partials/navbar %>
+		<div id="contentwrap">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6 margin-bottom-30">
+						<div class="portlet">
+							<div class="portlet-title">
+								<div class="caption">
+									<span class="caption-subject text-uppercase"> Data source summary</span>
+								</div>
+							</div>
+							<div class="portlet-body">
+								<h4><%= datasource.name %> </h4>
+								<p>
+									<%= datasource.description %>
+								</p>
+								<a id="showAddSignalForm" href="" class="btn btn-sm btn-primary">
+									<i class="fa fa-plus fa-1x"></i> Signal
+								</a>
+								<a href="/plot/<%= datasource._id %>" class="btn btn-sm btn-primary">
+									Plot
+								</a>
+								<a id="delete_datasource" class='btn btn-danger btn-sm pull-right' href="#" data-datasource_id="<%= datasource._id %>">
+									<span class="glyphicon glyphicon-remove"></span> Delete
+								</a>
+								<br>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 margin-bottom-30">
+						<div class="portlet">
+							<div class="portlet-title">
+								<div class="caption caption-red">
+									<span class="caption-subject text-uppercase"> Sharing</span>
+								</div>
+								<div class="actions">
+								</div>
+							</div>
+							<div class="portlet-body">
+								<a href="" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#share-datasource"><i class="fa fa-share fa-1x"></i> Share this datasource</a>
+								<hr>
+								<div id="datasource_shares">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="add_signal_form" class="row" style="display:none;">
+					<div class="col-md-12 margin-bottom-30">
+						<div class="portlet">
+							<% include ./partials/add_signal_form %>
+						</div>
+					</div>
+				</div>
+				<% if(datasource.type == "test_signals") { %>
+					<div class="row">
+						<div class="col-md-12 margin-bottom-30">
+							<!-- BEGIN Portlet PORTLET-->
+							<div class="portlet">
+								<div class="portlet-title">
+									<div class="caption">
+										<span class="caption-subject text-uppercase"> Signals</span>
+									</div>
+									<div class="actionss">
+									</div>
+									<div class="portlet-body">
+										<% if(datasource.signals.length > 0) { %>
+											<table class="table table-striped custab">
+												<thead>
+													<tr>
+														<th>Name</th>
+														<th>Details</th>
+														<th>Description</th>
+														<th class="text-center">Action</th>
+													</tr>
+												</thead>
+												<% for(var i=0; i < datasource.signals.length; i++) { %>
+													<tr>
+														<td>
+															<a href="/datasources/<%= datasource._id %>/signals/<%= datasource.signals[i]._id %>">
+																<%= datasource.signals[i].name %>
+															</a>
+														</td>
+														<td>
+															<% if(datasource.signals[i].data_count === 0) { %>
+																<p> No data </p>
+															<% } else { %>
+																<%= datasource.signals[i].data_count %> data point(s)
+															<% } %>
+														</td>
+														<td>
+															<%= datasource.signals[i].description %>
+														</td>
+														<td class="text-center">
+															
+															<form method="POST" action="/datasources/<%=datasource._id %>/deletesignal/<%= datasource.signals[i]._id %>" accept-charset="UTF-8" style="display:inline">
+    												<button class="btn btn-xs btn-danger" type="button" data-toggle="modal" data-target="#confirmDelete" data-title="Delete signal" 
+																		data-message="Are you sure you want to delete this signal?">
+        											<i class="glyphicon glyphicon-trash"></i> Delete
+    												</button>
+													</form>
+														</td>
+													</tr>
+												<% } %>
+											</table>
+										<% } %>
+									</div>
+								</div>
+							</div>
+						</div>
+						<% } %>
+					</div>
+			</div>
+		</div>
+		<% include ./partials/delete_signal_modal %>
+		<% include ./partials/share_datasource_modal %>
+		<% include ./partials/commonjs %>
+		<script src="/components/moment/min/moment.min.js"></script>
+		<script src="/static/js/datasource.js"></script>
+		<% include ./partials/delete_modal %>
+  	<% include ./partials/footer %>
+  </body>
+</html>

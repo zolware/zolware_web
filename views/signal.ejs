@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>Signal | Zolware</title>
+	<% include ./partials/headcommon %>
+		<link rel="stylesheet" type="text/css" href="/static/css/common.css">
+		<link rel="stylesheet" type="text/css" href="/static/css/project.css">
+
+
+
+		<meta name="description" content="New way to quantify your trades!">
+		<meta name="keywords" content="stock, options, trading, charting">
+		<meta name="author" content="Quantified Trade">
+
+</head>
+
+<body>
+
+
+	<% include ./partials/navbar %>
+
+
+		<div class="content">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6 margin-bottom-30">
+						
+						<!-- BEGIN Portlet PORTLET-->
+						<div class="portlet">
+							<div class="portlet-title">
+								<div class="caption">
+									<!-- <i class="glyphicon glyphicon-calendar"></i> -->
+									<span class="caption-subject text-uppercase"> Signal summary</span>
+								</div>
+							</div>
+							<div class="portlet-body">
+								<h4><%= signal.name %> </h4>
+								<p>
+									<% if(signal.description !== undefined) { %>
+										<%= signal.description %> 
+									<% } %>
+								</p>
+								<a id="showAddSignalForm" href="" class="btn btn-sm btn-primary">
+									<i class="fa fa-plus fa-1x"></i> Signal
+								</a>
+								<a id="delete_signal" class='btn btn-danger btn-sm pull-right' href="#" data-signal_id="<%= signal._id %>">
+									<span class="glyphicon glyphicon-remove"></span> Delete
+								</a>
+								<br>
+							</div>
+						</div>
+						<!-- END Portlet PORTLET-->
+					</div>
+
+					<div class="col-md-6 margin-bottom-30">
+						<!-- BEGIN Portlet PORTLET-->
+						<div class="portlet">
+							<div class="portlet-title">
+								<div class="caption caption-red">
+									<span class="caption-subject text-uppercase"> Sharing</span>
+								</div>
+								<div class="actions">
+
+								</div>
+							</div>
+							<div class="portlet-body">
+
+								
+
+							</div>
+						</div>
+						<!-- END Portlet PORTLET-->
+					</div>
+				</div>
+
+
+				<div class="row">
+					<div class="col-md-6 margin-bottom-30">
+						<div class="portlet">
+							<div class="portlet-body">
+								<p>Signal details</p>
+								
+								
+								<% if(signal.data_type === "RG") { %>
+									
+									
+									
+								<% } %>
+								
+								
+								
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				<div id="add_signal_form" class="row" style="display:none;">
+					<div class="col-md-12 margin-bottom-30">
+						<div class="portlet">
+							<% include ./partials/edit_signal_form %>
+						</div>
+					</div>
+				</div>
+
+
+						<a href="<%= back_url %>" class="btn btn-sm btn-primary"><i class="fa fa-arrow-left fa-1x"></i> Back to datasource</a>
+
+			</div>
+		</div>
+		<% include ./partials/delete_signal_modal %>
+			<% include ./partials/generate_initial_data_modal %>
+				<% include ./partials/footer %>
+
+					<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+					<script src="../../components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+					<script src="/static/js/datasource.js"></script>
+</body>
+
+</html>

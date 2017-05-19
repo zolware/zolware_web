@@ -1,0 +1,218 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>
+		<%= project.name %> | Zolware </title>
+	  <% include ./partials/headcommon %>
+
+		<link rel="stylesheet" type="text/css" href="/static/css/project.css">
+
+		<meta name="description" content="New way to quantify your trades!">
+		<meta name="keywords" content="stock, options, trading, charting">
+		<meta name="author" content="Zolware">
+</head>
+
+<body data-project_id="<%= project._id %>">
+	<% include ./partials/navbar %>
+
+		<div class="content">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6 margin-bottom-30">
+						<!-- BEGIN Portlet PORTLET-->
+						<div class="portlet">
+							<div class="portlet-title">
+								<div class="caption">
+									<span class="caption-subject text-uppercase"> Project Summary</span>
+								</div>
+								<div class="actions">
+									<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="modal" data-target="#myModal">
+									<span class="glyphicon glyphicon-pencil" style="margin-right: 0px;"></span>
+								Edit 
+								</button>
+								</div>
+							</div>
+							<div class="portlet-body">
+								<h4><%= project.name %> </h4>
+								<p>
+									<%= project.description %>
+								</p>
+								<hr>
+								<div class="row">
+									<div class="col-lg-12">
+										<p>
+											<a id="showAddDatasourceForm" href="" class="btn btn-sm btn-primary">
+												<i class="fa fa-plus fa-1x"></i> Data source
+											</a>
+											<!--
+											<a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#addprojectComponentModal">
+												<i class="fa fa-plus fa-1x"></i><br/> Model component
+											</a>
+											-->
+											<a href="#" class="btn btn-sm btn-danger pull-right" id="delete_project"  data-toggle="modal" data-target="#confirm-delete">
+												<i class="fa fa-minus"></i> Delete project
+											</a>
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- END Portlet PORTLET-->
+					</div>
+
+					<div class="col-md-6 margin-bottom-30">
+						<!-- BEGIN Portlet PORTLET-->
+						<div class="portlet">
+							<div class="portlet-title">
+								<div class="caption caption-red">
+									<span class="caption-subject text-uppercase"> Summary view</span>
+								</div>
+								<div class="actions">
+								</div>
+							</div>
+							<div class="portlet-body">
+
+								<div class="row">
+									<div class="col-lg-12">
+										<p>
+											<a href="#" class="btn btn-sq-sm btn-success">
+												<i class="fa fa-check fa-2x"></i><br/> OK
+											</a>
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- END Portlet PORTLET-->
+					</div>
+				</div>
+
+				<div id="add_datasource_form" class="row" style="display:none;">
+					<div class="col-md-12 margin-bottom-30">
+						<div class="portlet">
+							<% include ./partials/add_datasource_form %>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-12 margin-bottom-30">
+						<!-- BEGIN Portlet PORTLET-->
+						<div class="portlet">
+							<div class="portlet-title">
+								<div class="caption caption-red">
+									<span class="caption-subject text-uppercase"> Data sources</span>
+								</div>
+								<div class="actions">
+								</div>
+							</div>
+							<div class="portlet-body">
+								<table class="table table-striped custab">
+
+
+									<% if(datasources.length > 0) { %>
+																		<thead>
+										<tr>
+											<th>Name</th>
+											<th>Description</th>
+											<th>Tags</th>
+											<th>Date added</th>
+										</tr>
+									</thead>
+										<% for(var i=0; i < datasources.length; i++) { %>
+
+											<tr>
+												<td>
+													<a href="/datasources/<%= datasources[i]._id %>">
+														<%= datasources[i].name %>
+													</a>
+												</td>
+												<td>
+													<%= datasources[i].description %>
+												</td>
+												<td>
+													No tags
+												</td>
+												<td>
+													<%= datasources[i].updatedAt %>
+												</td>
+											</tr>
+											<% } %>
+												<% } else { %>
+													<tr>
+														<td colspan="3"> No data sources defined. </td>
+													</tr>
+													<% } %>
+								</table>
+							</div>
+						</div>
+						<!-- END Portlet PORTLET-->
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-12 margin-bottom-30">
+						<!-- BEGIN Portlet PORTLET-->
+						<div class="portlet">
+							<div class="portlet-title">
+								<div class="caption">
+									<span class="caption-subject text-uppercase"> Model components</span>
+								</div>
+								<div class="inputs">
+									<div class="portlet-input input-inline input-medium">
+									</div>
+								</div>
+							</div>
+							<div class="portlet-body">
+
+								<% if(project.components.length > 0) { %>
+
+									<table class="table table-striped custab" id="components_table">
+										<thead>
+											<tr>
+												<th>Name</th>
+												<th>Type</th>
+												<th>Status</th>
+												<th class="text-center">Action</th>
+											</tr>
+										</thead>
+
+										<% for(var i=0; i < project.components.length; i++) { %>
+											<tr>
+												<td>
+													<a href="/component/<%= project.components[i]._id %>">
+														<%= project.components[i].name %>
+													</a>
+												</td>
+												<td>
+													<%= project.components[i].type %>
+												</td>
+												<td>New</td>
+												<td class="text-center"><a class="btn btn-info btn-xs" href="/projects/editphase/"><span class="glyphicon glyphicon-edit"></span> Edit</a>
+													<a id="delete_project_phase" href="" class="btn btn-danger btn-xs delete_component" data-project="" data-component="<%= project.components[i]._id %>"><span class="glyphicon glyphicon-remove"></span> Del</a>
+												</td>
+											</tr>
+											<% } %>
+									</table>
+									<% } else { %>
+										<p> No components specified. </p>
+										<% } %>
+							</div>
+						</div>
+						<!-- END Portlet PORTLET-->
+					</div>
+				</div>
+			</div>
+		</div>
+	
+		<% include ./partials/delete_project_modal %>
+		<% include ./partials/edit_project_modal %>
+	
+
+		<% include ./partials/footer %>
+	
+		<% include ./partials/commonjs %>
+		<script src="/static/js/project.js"></script>
+</body>
+</html>

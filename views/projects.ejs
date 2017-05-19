@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+
+<head>
+	<title> Projects | Zolware </title>
+	<% include ./partials/headcommon %>
+
+		<link rel="stylesheet" type="text/css" href="/static/css/project.css">
+
+		<meta name="description" content="New way to quantify your trades!">
+		<meta name="keywords" content="stock, options, trading, charting">
+		<meta name="author" content="Zolware">
+
+</head>
+
+<body>
+
+<% include ./partials/navbar %>
+
+
+
+	<div class="content">
+		<div class="container">
+
+			<div class="row">
+
+
+				<div class="col-md-12 margin-bottom-30">
+					<!-- BEGIN Portlet PORTLET-->
+					<div class="portlet">
+						<div class="portlet-title">
+							<div class="caption caption-purple">
+								<span class="caption-subject text-uppercase"> Projects</span>
+							</div>
+							<div class="actions">
+								<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="modal" data-target="#newProjectModal">
+									<span class="glyphicon glyphicon-pencil" style="margin-right: 0px;"></span>
+								Add 
+								</button>
+							</div>
+						</div>
+						<div class="portlet-body">
+
+
+
+							<table class="table table-striped custab">
+								<thead>
+									<tr>
+										<th>Name</th>
+										<th>Description</th>
+										<th>Tags</th>
+										<th>Date added</th>
+									</tr>
+								</thead>
+
+								<% if(projects) { %>
+									<% if(projects.length > 0) { %>
+										<% for(var i=0; i < projects.length; i++) { %>
+											<tr>
+												<td>
+													<a href="/projects/<%= projects[i]._id %>">
+														<%= projects[i].name %>
+													</a>
+												</td>
+												<td>
+													<%= projects[i].description %>
+												</td>
+												<td>
+													No tags
+												</td>
+												<td>
+													<%= projects[i].updatedAt %>
+												</td>
+											</tr>
+										<% } %>
+									<% } %>
+								<% } else { %>
+									<tr>
+										<td colspan="9"> No projects defined.</td>
+									</tr>
+								<% } %>
+							</table>
+
+						</div>
+					</div>
+					<!-- END Portlet PORTLET-->
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+
+	<% include ./partials/footer %>
+	<% include ./partials/addprojectmodal %>
+<% include ./partials/addprojectmodal %>
+
+
+				<% include ./partials/commonjs %>
+					<script src="/static/js/project.js"></script>
+</body>
+
+</html>

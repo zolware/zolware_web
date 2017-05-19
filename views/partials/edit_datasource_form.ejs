@@ -1,0 +1,113 @@
+<h4>Edit data source </h4>
+<form role="form" action="/datasources/edit/<%= datasource._id  %>/adddatasource" method="post">
+  <div class="form-group">
+    <label for="email">Name:</label>
+    <input type="text" class="form-control" id="name" name="name" value="<%= datasource.name  %>">
+  </div>
+  <div class="form-group">
+    <label for="pwd">Description:</label>
+    <input type="text" value="<%= datasource.description  %>" class="form-control" id="description" name="description">
+  </div>
+
+
+
+  
+    <div class="form-group ">
+      <label class="control-label " for="select">
+       Data source type:
+      </label>
+      <select class="select form-control" id="datasource_type" name="datasource_type">
+       <option value="test_signal">
+        Test signal
+       </option>
+        <option value="other">
+        other
+       </option>
+      </select>
+    </div>
+
+    <div id="test_signals">
+
+
+
+      <div class="form-group ">
+        <label class="control-label " for="number">
+       Columns:
+      </label>
+        <select class="select form-control" id="number_cols" name="number_cols">
+       <option value="1">1</option>
+       <option value="2">2</option>
+      </select>
+        <span class="help-block" id="hint_number">
+       Number of uncorrelated signals (not including timestamp)
+      </span>
+      </div>
+
+      <!--  test signals    -->
+      
+      <% if(datasource.signals.length > 0) { %>
+      <% for(var i=0; i < datasource.signals.length; i++) { %>
+     <hr> 
+       <div class="col-md-12"> 
+    <div class="form-group row"> 
+      <!-- Signal name --> 
+      <div class="col-md-4"> 
+        <label for="signal_name' + '" class="col-form-label">Signal name<%= i %></label> 
+      </div> 
+      <div class="col-md-8"> 
+        <input type="text" class="form-control" name="signal_name' + '" id="signal_name <%= i %>" value="<%= datasource.signals[i].name %>"> 
+      </div> 
+    </div> 
+    <div class="form-group row"> 
+      <!-- Signal timestep --> 
+      <div class="col-md-4"> 
+        <label for="signal_dt" class="col-form-label">Timestep (min)</label> 
+      </div> 
+      <div class="col-md-8"> 
+        <input type="text" class="form-control" name="signal_dt' + '" id="signal_dt <%= i %>" value="<%= datasource.signals[i].dt %>"> 
+      </div> 
+    </div> 
+    <div class="form-group row"><!-- Signal linear --> 
+      <div class="col-md-4"> 
+        <label for="linear_gradient" class="col-form-label">Linear gradient</label> 
+      </div> 
+      <div class="col-md-8"> 
+        <input type="text" class="form-control" name="linear_gradient' + '" id="linear_gradient' + i + '" placeholder="" value="<%= datasource.signals[i].linear_gradient %>"> 
+      </div> 
+    </div> 
+    <div class="form-group row"><!-- Signal periodic --> 
+      <div class="col-md-4"> 
+        <label for="inputEmail3" class="col-form-label">Periodic component</label> 
+      </div> 
+      <div class="col-md-4"> 
+        <input type="text" class="form-control" name="periodic_mag' + '" id="periodic_mag' + i + '" placeholder="Magnitude" value="<%= datasource.signals[i].periodic_mag %>"> 
+      </div> 
+      <div class="col-md-4"> 
+        <input type="text" class="form-control" name="periodic_period' + '" id="periodic_period' + i + '" placeholder="Period" value="<%= datasource.signals[i].periodic_period %>"> 
+      </div> 
+    </div> 
+    <hr> 
+  </div>
+      
+      <% } %>
+      <% } %>
+      <!--  end test signals    -->
+      
+      
+
+    </div>
+    <!-- <div id="test_signals">  -->
+
+
+
+    <div class="form-group">
+      <div>
+        <button class="btn btn-primary " name="submit" type="submit">
+        Submit
+       </button>
+      </div>
+    </div>
+
+
+
+  </form>

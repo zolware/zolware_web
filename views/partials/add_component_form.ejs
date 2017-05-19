@@ -1,0 +1,51 @@
+
+<form class="form-horizontal" action="/models/<%= model._id %>/addcomponent" method="POST">
+  <fieldset>
+    <div class="form-group">
+      <label class="col-md-4 control-label" for="textinput">Name</label>  
+      <div class="col-md-4">
+      <input id="component_name" name="component_name" type="text" placeholder="Component name" class="form-control input-md">
+
+      </div>
+    </div>
+
+    <!-- Select Basic -->
+    <div class="form-group">
+      <label class="col-md-4 control-label" for="component_type">Type</label>
+      <div class="col-md-4">
+        <select id="component_type" name="component_type" class="form-control">
+          <option value="matrix">Matrix</option>
+          <option value="vector">Vector</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="rows_group" class="form-group">
+      <label class="col-md-4 control-label" for="component_rows"></label>
+      <div class="col-md-2">
+        <div class="input-group">
+          <input id="component_rows" name="component_rows" class="form-control" value="2" type="text">
+          <span class="input-group-addon">rows</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="cols_group" class="form-group">
+      <label class="col-md-4 control-label" for="component_cols"></label>
+      <div class="col-md-2">
+        <div class="input-group">
+          <input id="component_cols" name="component_cols" class="form-control" value="2" type="text">
+          <span class="input-group-addon">cols</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Button -->
+    <div class="form-group">
+      <label class="col-md-4 control-label" for="singlebutton"></label>
+      <div class="col-md-4">
+        <input class="btn btn-primary" type="submit">
+      </div>
+    </div>
+  </fieldset>
+</form>

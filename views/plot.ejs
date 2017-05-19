@@ -1,0 +1,131 @@
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<link rel="shortcut icon" href="assets/ico/favicon.ico">
+
+	<title>Zolware | Plot</title>
+
+	<% include ./partials/headcommon %>
+		<link rel="stylesheet" type="text/css" href="/static/css/common.css">
+		<link rel="stylesheet" type="text/css" href="/static/css/project.css">
+
+		<link href="/static/css/style.css" rel="stylesheet">
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body data-datasource_id="<%= data.datasource._id %>">
+	<% include ./partials/navbar %>
+	<div id="contentwrap">
+			<div class="content">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12 margin-bottom-30">
+							<form class="form-horizontal">
+								<div class="form-group">
+									<div class="col-md-4">
+										<label class="col-md-4 control-label" for="appendedtext">X-Axis minimum:</label>
+										<div class="input-group">
+											<input id="appendedtext" name="appendedtext" class="form-control" placeholder="placeholder" type="text">
+											<span class="input-group-addon">yyyy-mm-dd</span>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<label class="col-md-4 control-label" for="appendedtext">X-Axis maximum:</label>
+										<div class="input-group">
+											<input id="appendedtext" name="appendedtext" class="form-control" placeholder="placeholder" type="text">
+											<span class="input-group-addon">yyyy-mm-dd</span>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12 margin-bottom-30">
+							<form class="form-horizontal">
+								<div class="form-group">
+									<div class="col-md-4">
+										<label class="col-md-4 control-label" for="appendedtext">Y-Axis minimum:</label>
+										<div class="input-group">
+											<input id="appendedtext" name="appendedtext" class="form-control" placeholder="placeholder" type="text">
+											<span class="input-group-addon">m/s</span>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<label class="col-md-4 control-label" for="appendedtext">Y-Axis maximum:</label>
+										<div class="input-group">
+											<input id="appendedtext" name="appendedtext" class="form-control" placeholder="placeholder" type="text">
+											<span class="input-group-addon">m/s</span>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12 margin-bottom-30">
+							<!-- BEGIN Portlet PORTLET-->
+							<div class="portlet">
+								<div class="portlet-title">
+									<div class="caption">
+										<span class="caption-subject text-uppercase"> Plot: <%= data.datasource.name %> </span>
+									</div>
+								</div>
+								<div class="portlet-body">
+									<!-- <form id="signal_select" class="form-horizontal">
+										<fieldset>
+											<div class="form-group">
+												<label class="col-md-4 control-label" for="checkboxes">Signals</label>
+												<div class="col-md-4">
+													<% for(var i=0; i < data.datasource.signals.length; i++) { %>
+														<div class="checkbox">
+															<label for="checkboxes-0">
+																<input checked type="checkbox" name="checkboxes" id="checkbox-<%= data.datasource.signals[i]._id %>" value="<%= data.datasource.signals[i]._id %>" data-signal_id="<%= data.datasource.signals[i]._id %>">
+																<%= data.datasource.signals[i].name %>
+															</label>
+														</div>
+														<% } %>
+												</div>
+											</div>
+										</fieldset>
+									</form> -->
+									<canvas id="canvas"></canvas>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- <div>
+						<button id="randomizeData">Randomize Data</button>
+						<button id="addData">Add Data</button>
+						<button id="removeData">Remove Data</button>
+						<canvas id="canvas"></canvas>
+					</div> -->
+				</div>
+			</div>
+	</div>
+
+	<% include ./partials/footer %>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+	<script src="/static/components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
+
+	<script src="/static/js/plot.js"></script>
+</body>
+</html>

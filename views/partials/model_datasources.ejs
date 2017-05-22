@@ -27,6 +27,30 @@
 						<% } %>
 					<% } %>
 				<% } %>
+			
+			
+			<%= shared_datasources.length %>
+			<% if(shared_datasources) { %>
+			<option value="0">
+					-- Shared datasources --
+				</option>
+			<% } %>
+			
+			
+			<% for(var sds=0; sds < shared_datasources.length; sds++) { %>
+							<% if(shared_datasources[sds].datasource.signals.length > 0) { %>
+								<option value="	<%= shared_datasources[sds].datasource._id %> " 
+												data-number_signals = "<%= shared_datasources[sds].datasource.signals.length %>" 
+												data-datasource_id="<%= shared_datasources[sds].datasource._id %>"  
+												data-datasource_index="<%= sds %>"  
+												<% if(model.datasource != null && model.datasource._id == shared_datasources[sds].datasource._id) { %> 
+													selected 
+												<% } %> 
+												>	<%= shared_datasources[sds].datasource.name %> - <%= shared_datasources[sds].datasource.signals.length %> signal(s)
+								</option>
+							<% } %>
+						<% } %>
+			
 		</select>
 	</div>
 </fieldset>

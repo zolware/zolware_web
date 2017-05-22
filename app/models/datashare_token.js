@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var DataShareTokenSchema = new Schema({
-  user: {
+  sharedByUser: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
@@ -13,7 +13,7 @@ var DataShareTokenSchema = new Schema({
   token: {
     type: String
   },
-  sharewith:{
+  sharedWithUser:{
     type: String
   },
   createdAt: {

@@ -13,6 +13,22 @@ var SignalSchema = new Schema({
     type: String,
     default: 'No description'
   },
+  sensor_location: {
+    type: String,
+    default: ""
+  },
+  sensor_uri: {
+    type: String,
+    default: ""
+  },
+  sensor_type: {
+    type: String,
+    default: ""
+  },
+  sensor_data_type: {
+    type: String,
+    default: ""
+  },
   units: String,
   user: {
     type: mongoose.Schema.Types.ObjectId,
@@ -81,9 +97,8 @@ var DataSourceSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
-  projects: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Project'
+  tags: [{
+    type: String
   }],
   type: {
     type: String,

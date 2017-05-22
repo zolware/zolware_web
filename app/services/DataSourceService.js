@@ -30,6 +30,7 @@ exports.getAllDataSourcesForUser = function(req, res) {
     } else {
       res.render('datasources.ejs', {
         datasources: data.datasources,
+        shared_datasources: data.shared_datasources,
         user: user,
         back_url: req.header('Referer')
       })
@@ -366,6 +367,9 @@ exports.deleteShareTokenFromDataSource = function(req, res) {
   var datasource_id = req.params.datasource_id;
   var share_id = req.params.share_id;
   var user = req.user;
+  var output = req.query.output;
+  
+   var is_ajax_request = req.xhr;
   
   var options = {
     method: 'POST',
@@ -378,7 +382,14 @@ exports.deleteShareTokenFromDataSource = function(req, res) {
   
   request(options, function(error, response, body) {
     var data = JSON.parse(body);
-    res.json(data);
+    
+    
+     if (is_ajax_request || output === 'json') {
+       res.json(data);
+     }
+    else {
+      res.redirect('/datasources');
+    }
   });
 }
 

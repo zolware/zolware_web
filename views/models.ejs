@@ -45,9 +45,9 @@
 								<thead>
 									<tr>
 										<th>Name</th>
-										<th>Description</th>
-										<th>Tags</th>
-										<th>Date added</th>
+										<th class="hidden-xs hidden-sm">Description</th>
+										<th class="hidden-xs hidden-sm">Tags</th>
+										<th class="hidden-xs hidden-sm">Date added</th>
 										<th></th>
 									</tr>
 								</thead>
@@ -60,13 +60,13 @@
 														<%= models[i].name %>
 													</a>
 												</td>
-												<td>
+												<td class="hidden-xs hidden-sm">
 													<%= models[i].description %>
 												</td>
-												<td>
+												<td class="hidden-xs hidden-sm">
 													No tags
 												</td>
-												<td>
+												<td class="hidden-xs hidden-sm">
 													<%= models[i].updatedAt %>
 												</td>
 												<td>

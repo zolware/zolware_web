@@ -5,11 +5,14 @@
        Data source type:
       </label>
     <select class="select form-control" id="signal_type" name="signal_type">
-       <option value="generated_signal">
-        Generated signal
+       <option value="sensor_signal">
+        Sensor
        </option>
-        <option value="general_signal">
+      <option value="general_signal">
         General
+       </option>
+        <option value="generated_signal">
+        Generated signal
        </option>
       </select>
   </div>
@@ -36,19 +39,19 @@
       <input type="text" class="form-control" name="signal_dt" id="signal_dt" value="1440">
     </div>
   </div>
-  
 
 
-  <div id="generated_signal">
+
+  <div id="generated_signal" style="display:none;">
     <hr>
-       <div class="form-group row">
-     <div class="col-md-4">
-      <label for="signal_name" class="col-form-label">Start date</label>
+    <div class="form-group row">
+      <div class="col-md-4">
+        <label for="signal_name" class="col-form-label">Start date</label>
+      </div>
+      <div class="col-md-4">
+        <input type="date" name="start_date" id="start_date">
+      </div>
     </div>
-     <div class="col-md-4">
-  <input type="date" name="start_date" id="start_date">
-       </div>
-  </div>
     <div class="form-group row">
       <div class="col-md-3">
       </div>
@@ -108,7 +111,69 @@
   </div>
 
 
-  <div id="general_signal" style="display:none;">
+  <div id="general_signal">
+
+  </div>
+
+  <div id="sensor_signal">
+
+    <div class="form-group row">
+      <!-- Signal timestep -->
+      <div class="col-md-4">
+        <label for="signal_dt" class="col-form-label">Location</label>
+      </div>
+      <div class="col-md-8">
+        <input type="text" class="form-control" name="sensor_location" id="sensor_location" placeholder="Optional">
+      </div>
+    </div>
+
+
+    <div class="form-group row">
+      <!-- Signal timestep -->
+      <div class="col-md-4">
+        <label for="signal_dt" class="col-form-label">Sensor info</label>
+      </div>
+      <div class="col-md-8">
+        <input type="text" class="form-control" name="sensor_type" id="sensor_type" placeholder="Optional">
+      </div>
+    </div>
+
+
+    <div class="form-group ">
+      <label class="control-label " for="select">
+       Data type:
+      </label>
+      <select class="select form-control" id="sensor_data_type" name="sensor_data_type">
+       <option value="data_type_file" selected>
+        File
+       </option>
+      <option value="data_type_rest">
+        RESTFul endpoint
+       </option>
+      </select>
+    </div>
+    
+    <div class="form-group row" id="data_type_file">
+      <!-- Signal timestep -->
+      <div class="col-md-4">
+        <label for="sensor_uri" class="col-form-label">URI</label>
+      </div>
+      <div class="col-md-8">
+        <input type="text" class="form-control" name="sensor_uri" id="sensor_uri" placeholder="Optional">
+      </div>
+    </div>
+    
+    
+    <div class="form-group row" id="data_type_rest" style="display:none;">
+      <!-- Signal timestep -->
+      <div class="col-md-4">
+        <label for="sensor_rest" class="col-form-label">RESTFul endpoint</label>
+      </div>
+      <div class="col-md-8">
+        <input type="text" class="form-control" name="sensor_rest" id="sensor_rest" placeholder="Optional">
+      </div>
+    </div>
+
 
   </div>
 

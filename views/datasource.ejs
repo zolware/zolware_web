@@ -10,19 +10,15 @@
 
     <title>Zolware</title>
     <% include ./partials/headcommon %>
-    <!-- Custom styles for this template -->
     <link href="/static/css/style.css" rel="stylesheet">
 		<link rel="stylesheet" type="text/css" href="/static/css/project.css">
-    <!-- Just for debugging purposes. Don't actually copy this line! -->
-    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
-  <body>
+  <body data-datasource_id="<%= datasource._id %>">
     <% include ./partials/navbar %>
 		<div id="contentwrap">
 			<div class="container">
@@ -89,8 +85,8 @@
 												<thead>
 													<tr>
 														<th>Name</th>
-														<th>Details</th>
-														<th>Description</th>
+														<th class="hidden-xs hidden-sm">Details</th>
+														<th class="hidden-xs hidden-sm">Description</th>
 														<th class="text-center">Action</th>
 													</tr>
 												</thead>
@@ -101,14 +97,15 @@
 																<%= datasource.signals[i].name %>
 															</a>
 														</td>
-														<td>
+														<td class="hidden-xs hidden-sm">
+															<strong><%= datasource.signals[i].data_type %></strong> <br>
 															<% if(datasource.signals[i].data_count === 0) { %>
-																<p> No data </p>
+																No data 
 															<% } else { %>
 																<%= datasource.signals[i].data_count %> data point(s)
 															<% } %>
 														</td>
-														<td>
+														<td class="hidden-xs hidden-sm">
 															<%= datasource.signals[i].description %>
 														</td>
 														<td class="text-center">

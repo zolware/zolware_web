@@ -30,6 +30,10 @@ var ModelSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  running: {
+    type: Boolean,
+    default: false
+  },
 });
 
 ModelSchema.pre('remove', function(next) {

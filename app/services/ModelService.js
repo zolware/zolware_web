@@ -232,9 +232,11 @@ exports.getModelById = function(req, res) {
                   user: user,
                 });
               } else {
+                console.log(data_datasource);
                 res.render('model.ejs', {
                   model: data_model.model,
                   datasources: data_datasource.datasources,
+                  shared_datasources: data_datasource.shared_datasources,
                   signals: data_signals.signals,
                   user: user,
                   back_url: req.header('Referer')

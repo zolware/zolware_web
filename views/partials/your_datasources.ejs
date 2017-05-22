@@ -1,0 +1,44 @@
+<table class="table table-striped custab">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Tags</th>
+      <th></th>
+    </tr>
+  </thead>
+  <% if(datasources.length > 0) { %>
+    <% for(var i=0; i < datasources.length; i++) { %>
+      <tr>
+        <td>
+          <a href="/datasources/<%= datasources[i]._id %>">
+            <%= datasources[i].name %>
+          </a>
+        </td>
+        <td>
+          <%= datasources[i].description %>
+        </td>
+        <td>
+          <% if(datasources[i].projects.length > 0) { %>
+            <% for(var j=0; j < datasources[i].projects.length; j++) { %>
+              <a href="/projects/<%= datasources[i].projects[j]._id %>">
+                <%= datasources[i].projects[j].name %>
+              </a><br>
+              <% } %>
+                <% } %>
+        </td>
+        <td>
+          <form method="POST" action="/datasources/delete/<%= datasources[i]._id %>" accept-charset="UTF-8" style="display:inline">
+            <button class="btn btn-sm btn-danger" type="button" data-toggle="modal" data-target="#confirmDelete" data-title="Delete User" data-message="Are you sure you want to delete this datasource?">
+																Delete
+															</button>
+          </form>
+        </td>
+      </tr>
+      <% } %>
+        <% } else { %>
+          <tr>
+            <td colspan="9"> No data sources defined. </td>
+          </tr>
+          <% } %>
+</table>

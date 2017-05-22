@@ -21,6 +21,25 @@ var hat = require('hat');
 
 
 
+
+var santizeUserObjects = function(users) {
+  var cleanUsers = [];
+  for (i = 0; i < users.length; i++) { 
+    var cleanUser = {
+      displayName: users[i].local.displayName,
+      //email: users[i].local.email,
+    }
+     console.log(cleanUser);
+    cleanUsers.push(cleanUser);
+  }
+  return cleanUsers;
+}
+
+var santizeUserObject = function(user) {
+  return santizeUserObjects([user])[0];
+}
+
+
 exports.getAllDataSourcesForUser = function(req, res) {
   var authenticatedUser = req.user;
 
@@ -37,11 +56,28 @@ exports.getAllDataSourcesForUser = function(req, res) {
         datasources: []
       });
     } else {
-      var returnedDataSources = datasources;
+      
+      var userDataSources = datasources;
+
+      /* lets get shared datasources */
+      ShareToken.find(
+        {sharedWithUser:authenticatedUser.local.email})
+        .populate('datasource').lean().populate('sharedByUser').exec(function(err_sharedDatasource, sharedDatasources) {
+
+      sharedDatasources.forEach(function(dataSource) {
+       
+       dataSource.sharedByUser = santizeUserObject(dataSource.sharedByUser);
+      })
+      
       res.json({
         status: 1,
-        datasources: returnedDataSources
+        datasources: userDataSources,
+        shared_datasources: sharedDatasources
       });
+      
+      
+      });
+      
     }
   });
 }
@@ -316,6 +352,16 @@ var constructSignal = function(form_data) {
       dt: form_data.signal_dt,
       data_type: "General"
     });
+  } else if (form_data.signal_type === "sensor_signal") {
+    signal = new Signal({
+      name: form_data.signal_name,
+      dt: form_data.signal_dt,
+      data_type: "Sensor",
+      sensor_location: form_data.sensor_location,
+      sensor_type: form_data.sensor_type,
+      sensor_uri: form_data.sensor_uri,
+      sensor_data_type: form_data.sensor_data_type,
+    });
   }
   return signal;
 }
@@ -442,7 +488,7 @@ exports.deleteSignalFromDataSource = function(req, res) {
 exports.addDataSourceShareToken = function(req, res) {
   var datasource_id = req.params.datasource_id
   var authenticatedUser = req.user;
-  var sharewith = req.body.sharewith;
+  var sharedWithUser = req.body.sharewith;
 
   var criteria = {};
   criteria = {
@@ -464,8 +510,8 @@ exports.addDataSourceShareToken = function(req, res) {
 
       var sharetoken = new ShareToken({
         datasource: datasource,
-        user: authenticatedUser,
-        sharewith: sharewith,
+        sharedByUser: authenticatedUser,
+        sharedWithUser: sharedWithUser,
         token: token
       });
 
@@ -490,7 +536,7 @@ exports.getAllShareTokensForDataSource = function(req, res) {
   var criteria = {};
   criteria = {
     'datasource': datasource_id,
-    'user': authenticatedUser,
+    'sharedByUser': authenticatedUser,
   };
 
   ShareToken.find(
@@ -520,11 +566,12 @@ exports.deleteShareTokenFromDataSource = function(req, res) {
   var share_id = req.params.share_id;
   var authenticatedUser = req.user;
 
-  var criteria = {};
-  criteria = {
-    '_id': share_id,
-    'user': authenticatedUser,
-  };
+  var criteria = {
+    $and: [
+          {'_id': share_id},
+          { $or: [{'sharedByUser': authenticatedUser}, {'sharedWithUser': authenticatedUser.local.email}] }
+      ]
+  }
 
   ShareToken.findOne(criteria).remove(function(err, sharetoken) {
     if (err) {
@@ -533,7 +580,6 @@ exports.deleteShareTokenFromDataSource = function(req, res) {
         message: "No sharetoken defined"
       });
     } else {
-
       if (!err) {
         res.json({
           status: 1,
@@ -543,3 +589,6 @@ exports.deleteShareTokenFromDataSource = function(req, res) {
     }
   });
 }
+
+
+

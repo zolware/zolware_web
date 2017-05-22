@@ -1,0 +1,114 @@
+<div class="row">
+  <div class="col-md-12 margin-bottom-30">
+    <div class="portlet">
+      <div class="portlet-title">
+        <div class="caption">
+          <span class="caption-subject text-uppercase"> Model Summary</span>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="modal" data-target="#editModelModal">
+          <span class="glyphicon glyphicon-pencil" style="margin-right: 0px;"></span>
+            Edit 
+          </button>
+        </div>
+      </div>
+      <div class="portlet-body">
+        <h4><%= model.name %> </h4>
+        <p>
+          <%= model.description %>
+        </p>
+        <hr>
+        <div class="row">
+          <div class="col-lg-12">
+            <p>
+              <a id="showAddDatasourceForm" href="" class="btn btn-sm btn-primary">
+                <i class="fa fa-plus fa-1x"></i> Model component
+              </a>
+              <!--
+              <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#addmodelComponentModal">
+                <i class="fa fa-plus fa-1x"></i><br/> Model component
+              </a>
+              -->
+              <a href="#" class="btn btn-sm btn-danger pull-right" id="run_model">
+                <i class="fa fa-bolt"></i> Run model
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div id="add_datasource_form" class="row" style="display:none;">
+        <hr>
+        <div class="col-md-12 margin-bottom-30">
+          <div class="row">
+            <div class="col-md-3">
+              <a id="add_fullmodel" href="" class="btn btn-sm btn-primary">Add full model</a>
+            </div>
+            <div class="col-md-9">
+              <% include add_component_form %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6 margin-bottom-30">
+    <div class="portlet">
+      <div class="portlet-title">
+        <div class="caption caption-red">
+          <span class="caption-subject text-uppercase" id="signals_title"> Signals (<%= signals.length %>)</span>
+        </div>
+      </div>
+      <div class="portlet-body">
+        <div class="row">
+          <div class="col-lg-12">
+            <% include model_datasources %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 margin-bottom-30">
+    <div class="portlet">
+      <div class="portlet-title">
+        <div class="caption caption-red">
+          <span class="caption-subject text-uppercase" id="states_title"> States (<%= model.states.length %>)</span>
+        </div>
+      </div>
+      <div class="portlet-body">
+        <div class="row">
+          <div class="col-lg-12">
+            <% include model_states %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12 margin-bottom-30">
+    <div class="portlet">
+      <div class="portlet-title">
+        <div class="caption">
+          <span class="caption-subject text-uppercase"> Model components</span>
+        </div>
+        <div class="inputs">
+          <div class="portlet-input input-inline input-medium">
+            <a id="remove_all_components" href="" class="btn btn-sm btn-primary">Save</a>
+            <a id="remove_all_components" href="" class="btn btn-sm btn-primary">Remove all components</a>
+          </div>
+        </div>
+      </div>
+      <div class="portlet-body">
+        <% if(model.components.length > 0) { %>
+          <% for(var i=0; i < model.components.length; i++) { %>
+            <div id="component-<%= model.components[i]._id %>" data-component_id = "<%= model.components[i]._id %>"></div>
+          <% } %>
+          <% } else { %>
+            <p> No components specified. </p>
+          <% } %>
+      </div>
+    </div>
+  </div>
+</div>

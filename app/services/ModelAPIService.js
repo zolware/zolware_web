@@ -87,7 +87,8 @@ exports.addModel = function(req, res) {
   var newModel = Model({
     name: modelName,
     description: modelDescription,
-    user: authenticatedUser
+    user: authenticatedUser,
+    running: false
   });
 
   DataSource.findOne({

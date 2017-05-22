@@ -1,0 +1,39 @@
+<table class="table table-striped custab">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Owner</th>
+      <th>Tags</th>
+    </tr>
+  </thead>
+  <% if(shared_datasources.length > 0) { %>
+    <% for(var i=0; i < shared_datasources.length; i++) { %>
+      <tr>
+        <td>
+          <a href="/datasources/<%= shared_datasources[i].datasource._id %>">
+            <%= shared_datasources[i].datasource.name %>
+          </a>
+        </td>
+        <td>
+          <%= shared_datasources[i].datasource.description %>
+        </td>
+        <td>
+					<%= shared_datasources[i].sharedByUser.displayName %>
+        </td>
+        <td>
+          <form method="POST" action="/datasources/<%= shared_datasources[i].datasource._id %>/deleteshare/<%= shared_datasources[i]._id %>" accept-charset="UTF-8" style="display:inline">
+            <button class="btn btn-sm btn-danger" type="button" data-toggle="modal" data-target="#confirmDelete" data-title="Delete User" 
+										data-message="Are you sure you want to delete this shared datasource?">
+																Delete share
+															</button>
+          </form>
+        </td>
+      </tr>
+      <% } %>
+        <% } else { %>
+          <tr>
+            <td colspan="9"> No data sources defined. </td>
+          </tr>
+          <% } %>
+</table>

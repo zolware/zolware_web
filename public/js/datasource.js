@@ -5,7 +5,7 @@ var populateDataSourceShareTable = function(data) {
     var table = $('<table><col width="30%"><col width="40%"><col width="30%"></table>').addClass('table-striped custab');
     table.append('<thead><tr><th>User</th><th>Access token</th></tr><tr></tr></thead>');
     for (i = 0; i < sharetokens.length; i++) {
-      var html = '<td>' + sharetokens[i].sharewith + '</td>\
+      var html = '<td>' + sharetokens[i].sharedWithUser + '</td>\
         <td>' + sharetokens[i].token + '</td>\
         <td><a id="delete_sharetoken" href="" \
         class="btn btn-danger btn-xs pull-right" \
@@ -83,19 +83,32 @@ $(function() {
     var datasource_id = selected.data('datasource_id');
     var component_id = $(this).data("component_id");
 
-    console.log($(this).val());
-
     if ($(this).val() === "") {
 
     }
 
     $('#generated_signal').hide();
     $('#general_signal').hide();
-
+    $('#sensor_signal').hide();
     $('#' + $(this).val()).show();
 
   });
 });
+
+
+$(function() {
+  $("#sensor_data_type").change(function(e) {
+    e.preventDefault();
+
+    $('#data_type_file').hide();
+    $('#data_type_rest').hide();
+    
+    $('#' + $(this).val()).show();
+
+  });
+});
+
+
 
 
 $(function() {

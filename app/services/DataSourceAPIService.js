@@ -29,7 +29,6 @@ var santizeUserObjects = function(users) {
       displayName: users[i].local.displayName,
       //email: users[i].local.email,
     }
-     console.log(cleanUser);
     cleanUsers.push(cleanUser);
   }
   return cleanUsers;
@@ -309,6 +308,7 @@ var constructSignal = function(form_data) {
 
     signal = new Signal({
       name: form_data.signal_name,
+      description: form_data.signal_description,
       dt: form_data.signal_dt,
       data_type: "RG",
       linear_gradient: linear_gradient,
@@ -323,7 +323,6 @@ var constructSignal = function(form_data) {
 
     var measurements = [];
 
-    console.log(form_data);
     var counter = 0;
     var linear_counter = 0;
     var periodic_counter = 0;
@@ -349,12 +348,14 @@ var constructSignal = function(form_data) {
   } else if (form_data.signal_type === "general_signal") {
     signal = new Signal({
       name: form_data.signal_name,
+      description: form_data.signal_description,
       dt: form_data.signal_dt,
       data_type: "General"
     });
   } else if (form_data.signal_type === "sensor_signal") {
     signal = new Signal({
       name: form_data.signal_name,
+      description: form_data.signal_description,
       dt: form_data.signal_dt,
       data_type: "Sensor",
       sensor_location: form_data.sensor_location,

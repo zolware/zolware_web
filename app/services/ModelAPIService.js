@@ -403,12 +403,11 @@ exports.deleteComponentFromModel = function(req, res) {
 exports.deleteAllComponentsFromModel = function(req, res) {
   var model_id = req.params.model_id;
   var user = req.user;
-
+  
   Model.findOne({
     '_id': model_id,
     'user': user
   }).exec(function(err_model, model) {
-
     if (!model || err_model) {
       res.json({
         status: 0,
@@ -425,10 +424,12 @@ exports.deleteAllComponentsFromModel = function(req, res) {
             message: ' components not found'
           });
         } else {
+          /* Remove existing components */
           model.components = [];
           model.save(function(err, model) {
             res.json({
               status: 1,
+              message: component.length + " component(s) removed from model.",
               model: model
             });
           });

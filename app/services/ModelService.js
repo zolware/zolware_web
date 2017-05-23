@@ -232,7 +232,6 @@ exports.getModelById = function(req, res) {
                   user: user,
                 });
               } else {
-                console.log(data_datasource);
                 res.render('model.ejs', {
                   model: data_model.model,
                   datasources: data_datasource.datasources,
@@ -380,7 +379,6 @@ exports.updateModelComponent = function(req, res) {
   request(options, function(error, response, body) {
     var data = JSON.parse(body);
     var model = data.model
-      // console.log(model);
     if (error)
       throw error;
     res.redirect(config.routes.models + model._id);

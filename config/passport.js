@@ -42,12 +42,11 @@ module.exports = function(passport) {
         passReqToCallback : true // allows us to pass in the req from our route (lets us check if a user is logged in or not)
     },
     function(req, email, password, done) {
-        if (email)
-            email = email.toLowerCase(); // Use lower-case e-mails to avoid case-sensitive e-mail matching
 
+      var criteria = {$or: [{"local.displayName": email}, {"local.email": email.toLowerCase()}]};
         // asynchronous
         process.nextTick(function() {
-            User.findOne({ 'local.email' :  email }, function(err, user) {
+            User.findOne(criteria, function(err, user) {
                 // if there are any errors, return the error
                 if (err)
                     return done(err);
@@ -99,7 +98,7 @@ module.exports = function(passport) {
                     } else {
 
                         // create the user
-                        var newUser            = new User();
+                        var newUser = new User();
                         newUser.local.displayName = req.body.displayName;
                         newUser.local.email    = email;
                         newUser.local.password = newUser.generateHash(password);

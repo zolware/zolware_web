@@ -5,6 +5,7 @@ var bcrypt   = require('bcrypt-nodejs');
 
 // define the schema for our user model
 var userSchema = mongoose.Schema({
+    isAdmin: { type: Boolean, default: false },
     firstLogin: { type: Boolean, default: true },
     token: String,
     recentMessages: Number,
@@ -50,6 +51,16 @@ userSchema.post('save', function(doc) {
   //doc.token = token;
   //doc.save();
 });
+
+
+userSchema.methods.getSafeUser = function() {
+   var user = this;
+   //filter user as per your requirements here.
+  
+  
+
+   return user;
+}
 
 // generating a hash
 userSchema.methods.generateHash = function(password) {

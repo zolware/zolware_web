@@ -5,7 +5,8 @@ var dataSourceAPIService = require('../services/DataSourceAPIService');
 var signalService = require('../services/SignalService');
 var signalAPIService = require('../services/SignalAPIService')
 
-module.exports = function(app) {
+
+module.exports = function(app, parseForm, csrfProtection) {
 
   // projects
   app.get('/api/datasources', authenticationService.checkAuthToken, dataSourceAPIService.getAllDataSourcesForUser);
@@ -35,9 +36,9 @@ module.exports = function(app) {
   
   
   // projects
-  app.get('/datasources', authenticationService.isLoggedIn, dataSourceService.getAllDataSourcesForUser);
+  app.get('/datasources', csrfProtection, authenticationService.isLoggedIn, dataSourceService.getAllDataSourcesForUser);
   app.get('/datasources/:datasource_id', authenticationService.isLoggedIn, dataSourceService.getDataSourceById);
-  app.post('/datasources/add', authenticationService.isLoggedIn, dataSourceService.addDataSource);
+  app.post('/datasources/add', parseForm, csrfProtection, authenticationService.isLoggedIn, dataSourceService.addDataSource);
   app.post('/datasources/edit/:datasource_id', authenticationService.isLoggedIn, dataSourceService.editDataSource);
   app.post('/datasources/delete/:datasource_id', authenticationService.isLoggedIn, dataSourceService.deleteDataSource);
   

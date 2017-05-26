@@ -7,9 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="shortcut icon" href="assets/ico/favicon.ico">
-
     <title>Zolware | Login</title>
-    
     <% include ./partials/headcommon %>
     <link href="css/login.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
@@ -34,7 +32,7 @@
                         <%= message %>
                       </div>
                     <% } %>
-                    <input type="email" name="email" placeholder="Email" required class="form-control input-lg" />
+                    <input type="text" name="email" placeholder="Name or Email" required class="form-control input-lg" />
                     <input name="password" type="password" class="form-control input-lg" id="password" placeholder="Password" required="" />
                     <div class="pwstrength_viewport_progress"></div>
                     <button type="submit" name="go" class="btn btn-lg btn-primary btn-block">Sign in</button>

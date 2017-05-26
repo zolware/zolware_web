@@ -3,51 +3,38 @@ var request = require('request');
 var moment = require('moment');
 
 // Local libraries
+var utils = require('../lib/utils.js');
 var datalib = require('../lib/datalib.js');
 
 var DataSource = require('../models/data_source').DataSource;
 var Project = require('../models/project');
 var Signal = require('../models/data_source').Signal;
 var Model = require('../models/model');
-
 var ShareToken = require('../models/datashare_token');
-
 var signalAPIService = require('../services/SignalAPIService');
-
 var mongoose = require('mongoose');
 var asyncR = require('async');
 
 var hat = require('hat');
 
-
-
-
-var santizeUserObjects = function(users) {
-  var cleanUsers = [];
-  for (i = 0; i < users.length; i++) { 
-    var cleanUser = {
-      displayName: users[i].local.displayName,
-      //email: users[i].local.email,
-    }
-    cleanUsers.push(cleanUser);
-  }
-  return cleanUsers;
-}
-
-var santizeUserObject = function(user) {
-  return santizeUserObjects([user])[0];
-}
+var validator = require('validator');
 
 
 exports.getAllDataSourcesForUser = function(req, res) {
   var authenticatedUser = req.user;
+  
+  var sort = req.query.sort;
+	sort = (typeof req.query.sort === 'undefined') ? "desc" : sort;
+	var sortInt = (sort === 'desc') ? -1 : 1;
 
-  var criteria = {};
-  criteria = {
+  var criteria = {
     'user': authenticatedUser,
   };
 
-  DataSource.find(criteria).populate('projects', 'name').exec(function(err_datasource, datasources) {
+  DataSource.find(criteria)
+    .sort({name: sort})
+    .populate('projects', 'name')
+    .exec(function(err_datasource, datasources) {
     if (err_datasource || !datasources.length) {
       res.json({
         status: 0,
@@ -55,28 +42,21 @@ exports.getAllDataSourcesForUser = function(req, res) {
         datasources: []
       });
     } else {
-      
       var userDataSources = datasources;
-
       /* lets get shared datasources */
-      ShareToken.find(
-        {sharedWithUser:authenticatedUser.local.email})
+      ShareToken.find({
+          sharedWithUser: authenticatedUser.local.email
+        })
         .populate('datasource').lean().populate('sharedByUser').exec(function(err_sharedDatasource, sharedDatasources) {
-
-      sharedDatasources.forEach(function(dataSource) {
-       
-       dataSource.sharedByUser = santizeUserObject(dataSource.sharedByUser);
-      })
-      
-      res.json({
-        status: 1,
-        datasources: userDataSources,
-        shared_datasources: sharedDatasources
-      });
-      
-      
-      });
-      
+          sharedDatasources.forEach(function(dataSource) {
+            dataSource.sharedByUser = utils.santizeUserObject(dataSource.sharedByUser);
+          })
+          res.json({
+            status: 1,
+            datasources: userDataSources,
+            shared_datasources: sharedDatasources
+          });
+        });
     }
   });
 }
@@ -88,6 +68,9 @@ exports.addDataSource = function(req, res) {
   var datasourceName = req.body.datasource_name;
   var datasourceDescription = req.body.datasource_description;
   var authenticatedUser = req.user;
+  
+  datasourceName = validator.escape(datasourceName);
+  datasourceDescription = validator.escape(datasourceDescription);
 
   var newDataSource = DataSource({
     name: datasourceName,
@@ -95,16 +78,23 @@ exports.addDataSource = function(req, res) {
     user: authenticatedUser
   });
 
-  newDataSource.save(function(err) {
+  newDataSource.save(function(err, newDataSource) {
     if (err)
       res.json({
         status: 0,
-        message: 'DataSource not saved'
+        message: 'Datasource not saved'
       });
     else
       res.json({
         status: 1,
-        message: 'DataSource saved successfully'
+        message: 'Datasource saved successfully',
+        links: {
+          href: '/datasources/' + newDataSource._id
+        },
+        datasource: {
+          name: newDataSource.name,
+          description: newDataSource.description,
+        }
       });
   });
 };
@@ -120,7 +110,6 @@ exports.getDataSourceById = function(req, res) {
     '_id': datasource_id,
     'user': authenticatedUser
   }).populate('signals', '-measurements').exec(function(err, datasource) {
-    //}).populate('signals -measurements').exec(function(err, datasource) {
     if (err)
       res.json({
         status: 0,
@@ -369,8 +358,6 @@ var constructSignal = function(form_data) {
 
 
 
-//datalib.generateInitialData(0,2);
-
 exports.addSignalToDataSource = function(req, res) {
   var datasource_id = req.params.datasource_id
   var user = req.user;
@@ -568,10 +555,15 @@ exports.deleteShareTokenFromDataSource = function(req, res) {
   var authenticatedUser = req.user;
 
   var criteria = {
-    $and: [
-          {'_id': share_id},
-          { $or: [{'sharedByUser': authenticatedUser}, {'sharedWithUser': authenticatedUser.local.email}] }
-      ]
+    $and: [{
+      '_id': share_id
+    }, {
+      $or: [{
+        'sharedByUser': authenticatedUser
+      }, {
+        'sharedWithUser': authenticatedUser.local.email
+      }]
+    }]
   }
 
   ShareToken.findOne(criteria).remove(function(err, sharetoken) {
@@ -590,6 +582,3 @@ exports.deleteShareTokenFromDataSource = function(req, res) {
     }
   });
 }
-
-
-

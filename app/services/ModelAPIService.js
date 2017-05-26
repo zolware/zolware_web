@@ -1,3 +1,5 @@
+"use strict";
+
 var Model = require('../models/model');
 var DataSource = require('../models/data_source').DataSource;
 var Signal = require('../models/data_source').Signal;
@@ -9,23 +11,20 @@ var KalmanFilter = require('../models/component').KalmanFilter;
 var mongoose = require('mongoose');
 var validator = require('validator');
 
+var csrf = require('csurf')
+
 exports.getAllModelsForUser = function(req, res) {
   var authenticatedUser = req.user;
 
-  var findCriteria = {
+  let findCriteria = {
     'user': authenticatedUser,
   };
 
   Model.find(findCriteria, function(err, models) {
-    if (!models) {
+    if (err || !models) {
       res.json({
         status: 0,
         message: "No models found."
-      });
-    } else if (err) {
-      res.json({
-        status: 0,
-        message: "Error finding models."
       });
     } else {
       var returnedModels = models;
@@ -126,11 +125,11 @@ exports.addModel = function(req, res) {
 
 
 exports.getModelById = function(req, res) {
-  var modelId = req.params.model_id;
+  var model_id = req.params.model_id;
   var authenticatedUser = req.user;
 
   var modelFindCriteria = {
-    '_id': modelId,
+    '_id': model_id,
     'user': authenticatedUser
   };
 
@@ -152,26 +151,26 @@ exports.getModelById = function(req, res) {
 
 
 exports.deleteModel = function(req, res) {
-  var modelId = req.params.model_id;
+  var model_id = req.params.model_id;
 
-  if (modelId === "") {
+  if (model_id === "") {
     res.json({
       status: -1,
-      message: "Could not find model with ID " + modelId
+      message: "Could not find model with ID " + model_id
     });
   } else {
     Model.find({
-      _id: modelId
-    }).remove(function(err, modelId) {
+      _id: model_id
+    }).remove(function(err, model_id) {
       if (err) {
         res.json({
           status: -2,
-          message: "Could not remove model with ID " + modelId
+          message: "Could not remove model with ID " + model_id
         });
       } else
         res.json({
           status: 1,
-          message: "Model removed with ID " + modelId
+          message: "Model removed with ID " + model_id
         });
     })
   }
@@ -180,7 +179,7 @@ exports.deleteModel = function(req, res) {
 
 
 exports.editModel = function(req, res) {
-  var modelId = req.params.model_id;
+  var model_id = req.params.model_id;
   var name = req.body.model_name;
   var description = req.body.model_description;
   var authenticatedUser = req.user;
@@ -190,17 +189,17 @@ exports.editModel = function(req, res) {
       staus: -2,
       message: "Model name cannot be zero"
     });
-  } else if (modelId === "") {
+  } else if (model_id === "") {
     res.json({
       staus: -1,
-      message: "Could not find model with ID " + modelId
+      message: "Could not find model with ID " + model_id
     });
   } else {
     name = validator.escape(name);
     description = validator.escape(description);
 
     var modelFindCriteria = {
-      '_id': modelId,
+      '_id': model_id,
       'user': authenticatedUser
     };
 
@@ -208,7 +207,7 @@ exports.editModel = function(req, res) {
       if (errModel) {
         res.json({
           status: 1,
-          message: "Model not found with ID " + modelId
+          message: "Model not found with ID " + model_id
         });
       } else {
         model.name = name;
@@ -239,7 +238,6 @@ exports.getComponentsForModel = function(req, res) {
   };
 
   Model.findOne(modelFindCriteria).populate('components').exec(function(errModel, model) {
-
     if (!model || errModel)
       res.json({
         status: 0,

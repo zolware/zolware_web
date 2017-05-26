@@ -7,6 +7,7 @@
       </div>
       <div class="modal-body">
         <form role="form" action="/datasources/add" method="post">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
           <div class="form-group">
             <label for="email">Name:</label>
             <input type="text" class="form-control" id="datasource_name" name="datasource_name">

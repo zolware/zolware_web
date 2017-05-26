@@ -2,8 +2,14 @@
 
 // set up ======================================================================
 // get all the tools we need
+var compression = require('compression')
 var express  = require('express');
 var app      = express();
+app.use(compression())
+
+var helmet = require('helmet')
+app.use(helmet())
+
 var port     = process.env.SERVER_PORT;
 var mongoose = require('mongoose');
 var passport = require('passport');
@@ -19,6 +25,12 @@ var session      = require('express-session');
 var configDB = require('./config/database.js');
 
 var MongoStore = require('connect-mongo/es5')(session);
+
+var adminService = require('./app/services/AdminService');
+
+var csrf = require('csurf')
+var csrfProtection = csrf({ cookie: true })
+var parseForm = bodyParser.urlencoded({ extended: false })
 
 // configuration ===============================================================
 mongoose.connect(configDB.url); // connect to our database
@@ -59,6 +71,8 @@ app.use(session({
     rolling: true,
     resave: true, 
   },
+  resave: true,
+  saveUninitialized: true,
   rolling: true,
     store   : new MongoStore({
         url  : configDB.url
@@ -71,21 +85,21 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
-// forward all requests to /s/* to /index.html
-app.use(function(req, res, next) {
-  //var re = /\/(.*)/;
-  //var results = req.url.match(re);
-  next();
-});
+// Check the mode of the site
+app.use(adminService.getSiteMode);
+
+
 
 
 // routes ======================================================================
 require('./app/routes/routes.js')(app);
 require('./app/routes/loginroutes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 require('./app/routes/projectroutes.js')(app);
-require('./app/routes/datasourceroutes.js')(app);
+require('./app/routes/datasourceroutes.js')(app, parseForm, csrfProtection);
 require('./app/routes/modelroutes.js')(app);
 require('./app/routes/plotroutes.js')(app);
+
+require('./app/routes/api/apimodelroutes.js')(app);
 
 // launch ======================================================================
 app.listen(port);

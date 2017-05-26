@@ -101,13 +101,15 @@
         </div>
       </div>
       <div class="portlet-body">
+         <% if(model.components) { %>
         <% if(model.components.length > 0) { %>
           <% for(var i=0; i < model.components.length; i++) { %>
             <div id="component-<%= model.components[i]._id %>" data-component_id = "<%= model.components[i]._id %>"></div>
           <% } %>
-          <% } else { %>
+        <% } else { %>
             <p> No components specified. </p>
-          <% } %>
+        <% } %>
+        <% } %>
       </div>
     </div>
   </div>

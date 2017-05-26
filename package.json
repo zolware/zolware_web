@@ -2,20 +2,28 @@
   "name": "ZolwareSite",
   "main": "server.js",
   "dependencies": {
-     "async": "latest",
+    "async": "latest",
     "bcrypt-nodejs": "latest",
     "bluebird": "^3.1.1",
-    "body-parser": "1.0.2",
-    "connect": "3.4.1",
-    "connect-flash": "~0.1.1",
-    "connect-mongodb": "1.1.5",
+    "body-parser": "latest",
+    "chart.js": "latest",
+    "compression": "latest",
+    "connect": "latest",
+    "connect-flash": "latest",
     "connect-mongo": "latest",
-    "cookie-parser": "1.0.1",
+    "connect-mongodb": "latest",
+    "cookie-parser": "latest",
+    "csurf": "^1.9.0",
     "ejs": "0.8.8",
     "express": "^4.1.0",
-    "express-session": "1.0.4",
+    "express-session": "latest",
+    "hat": "latest",
+    "helmet": "^3.6.1",
+    "i18n": "latest",
     "method-override": "~1.0.0",
+    "moment": "latest",
     "mongoose": "latest",
+    "mongoose-schema-extend": "0.2.0",
     "morgan": "~1.0.0",
     "nodemailer": "2.1.0",
     "nodemailer-smtp-transport": "2.0.1",
@@ -26,18 +34,15 @@
     "passport-local": "0.1.6",
     "passport-twitter": "~1.0.2",
     "request": "^2.67.0",
-    "mongoose-schema-extend": "0.2.0",
-    "hat": "latest",
-    "i18n": "latest",
-    "chart.js": "latest",
-    "moment": "latest",
     "validator": "latest"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha test"
+    "test": "./node_modules/.bin/mocha --reporter spec"
   },
   "devDependencies": {
-    "mocha": "2.4.5",
-    "supertest": "1.2.0"
+    "mocha": "latest",
+    "chai": "latest",
+    "supertest": "latest",
+    "should": "^11.2.1"
   }
 }

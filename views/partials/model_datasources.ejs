@@ -29,12 +29,11 @@
 				<% } %>
 			
 			
-			<%= shared_datasources.length %>
 			<% if(shared_datasources) { %>
 			<option value="0">
 					-- Shared datasources --
 				</option>
-			<% } %>
+
 			
 			
 			<% for(var sds=0; sds < shared_datasources.length; sds++) { %>
@@ -49,6 +48,8 @@
 												>	<%= shared_datasources[sds].datasource.name %> - <%= shared_datasources[sds].datasource.signals.length %> signal(s)
 								</option>
 							<% } %>
+						<% } %>
+			
 						<% } %>
 			
 		</select>

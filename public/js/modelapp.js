@@ -16,6 +16,8 @@ var modelApp = modelApp || {};
     init: function() {
       modelApp.modelcode.getModel();
       zolwareModelApp.modelApp.attachHandlers();
+      modelApp.modelcode.getDataSourcesForUser();
+      modelApp.modelcode.getSignalNamesFromDataSource(34);
     },
 
 
@@ -30,7 +32,7 @@ var modelApp = modelApp || {};
       //$('#confirm-delete-model').on('click', '#btn-ok-delete-model', modelApp.handlers.deleteModel);
       $('body').on('click', '#btn-ok-delete-model', modelApp.handlers.deleteModel);
       
-      $("#datasource").change(modelApp.handlers.changeDatasourceForModel);
+      $("#datasource_select").change(modelApp.handlers.changeDatasourceForModel);
       
       $('body').on('click', '#remove_state', modelApp.handlers.removeState);
       

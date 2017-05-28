@@ -78,7 +78,7 @@ modelApp.handlers = {
 
 	changeDatasourceForModel: function(e) {
 		e.preventDefault();
-		var selected = $('select').find('option:selected');
+		var selected = $('datasource_select').find('option:selected');
 		var datasource_id = $(this).find(':selected').data('datasource_id');
 		var model_id = $('body').data("model_id");
 		modelApp.modelcode.saveModelDataSource(model_id, datasource_id);

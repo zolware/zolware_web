@@ -11,13 +11,16 @@ modelApp.modelcode = {
   },
 
 
-  getSignalNamesFromDataSource: function(datasource_id) {
+  getSignalNamesFromDataSource: function(datasource_id2) {
+    var datasource_id = $('#datasource_select').data("model_datasource");
     $.ajax({
       type: 'GET',
       url: '/datasources/' + datasource_id + '/signals?depth=name,description',
       dataType: "json",
       async: true,
-      success: modelApp.view.populateSignalTable
+      success: function(data) {
+        modelApp.view.populateSignalTable(data)
+      }
     });
   },
 
@@ -59,6 +62,19 @@ modelApp.modelcode = {
     zolwareModelApp.modelApp.Global.num_signals = num_signals;
     modelApp.modelcode.getStates();
   },
+  
+  
+  getDataSourcesForUser: function() {
+   var model_id = $('body').data("model_id");
+    $.ajax({
+      type: 'GET',
+      url: '/datasources',
+      dataType: "json",
+      async: true,
+      success: modelApp.view.populateDatasourcesSelect
+    });
+  },
+
 
 
   loadComponents: function() {

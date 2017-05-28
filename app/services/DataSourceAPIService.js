@@ -51,6 +51,7 @@ exports.getAllDataSourcesForUser = function(req, res) {
           sharedDatasources.forEach(function(dataSource) {
             dataSource.sharedByUser = utils.santizeUserObject(dataSource.sharedByUser);
           })
+					res.set('X-Total-Count', datasources.length.toString());
           res.json({
             status: 1,
             datasources: userDataSources,

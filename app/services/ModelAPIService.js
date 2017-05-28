@@ -442,6 +442,8 @@ exports.changeDataSourceForModel = function(req, res) {
   var model_id = req.params.model_id;
   var datasource_id = req.params.datasource_id;
   var user = req.user;
+  
+  
 
   Model.findOne({
     '_id': model_id,
@@ -457,6 +459,8 @@ exports.changeDataSourceForModel = function(req, res) {
         '_id': datasource_id,
         'user': user
       }).populate('signals', '-measurements').exec(function(err_datasource, datasource) {
+        
+       
 
         if (!datasource || err_datasource) {
           res.json({

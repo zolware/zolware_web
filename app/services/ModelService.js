@@ -168,6 +168,35 @@ var returnPackage = {};
 }
 
 
+var Promise = require("bluebird");
+var request = Promise.promisifyAll(require("request"), {multiArgs: true});
+
+exports.getModelByIdNew = function(req, res) {
+  
+  var promise = null;
+  
+  var optionsForModel = {
+    method: 'GET',
+    uri: config.app.baseurl + config.api.url + 'models/' + model_id,
+    headers: {
+      'Content-Type': config.api.contentType,
+      'Authorization': 'Bearer ' + user.token
+    }
+  };
+ 
+
+  
+  request.getAsync(optionsForModel)
+    .then(function(error1, response1, body1){
+    console.log(body1);
+});
+  
+  
+  
+}
+
+
+
 exports.getModelById = function(req, res) {
   var model_id = req.params.model_id
   var output = req.query.output;
@@ -202,7 +231,7 @@ exports.getModelById = function(req, res) {
         var data_datasource = JSON.parse(body_datasource);
         
         var modelDatasource = "1";
-        if(data_datasource.status == 1 && data_model.model.datasource !== undefined)
+        if(data_datasource.status == 1 && data_model.model.datasource !== undefined && data_model.model.datasource !== null)
           modelDatasource = data_model.model.datasource._id;
         
         var optionsForSignals = {
@@ -222,8 +251,8 @@ exports.getModelById = function(req, res) {
             if (is_ajax_request || output === 'json') {
               res.json({
                 model: data_model.model,
-                datasources: data_datasource,
-                signals: data_signals.signals
+                //datasources: data_datasource,
+                //signals: data_signals.signals
               });
             } else {
               if (data_model.status === 0 ) {
@@ -234,9 +263,9 @@ exports.getModelById = function(req, res) {
               } else {
                 res.render('model.ejs', {
                   model: data_model.model,
-                  datasources: data_datasource.datasources,
-                  shared_datasources: data_datasource.shared_datasources,
-                  signals: data_signals.signals,
+                  //datasources: data_datasource.datasources,
+                  //shared_datasources: data_datasource.shared_datasources,
+                  //signals: data_signals.signals,
                   user: user,
                   back_url: req.header('Referer')
                 })
@@ -491,7 +520,7 @@ exports.getModelStates = function(req, res) {
   var user = req.user;
 
   var options = {
-    method: 'POST',
+    method: 'GET',
     uri: config.app.baseurl + config.api.url + 'models/' + model_id + '/getstates',
     headers: {
       'Content-Type': config.api.contentType,
@@ -501,11 +530,12 @@ exports.getModelStates = function(req, res) {
   };
 
   request(options, function(error, response, body) {
+    console.log(body);
     var data = JSON.parse(body);
     if (error)
       throw error;
 
-    res.json(body);
+    res.json(data);
   });
 }
 

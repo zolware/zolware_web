@@ -28,7 +28,8 @@ exports.getAllModelsForUser = function(req, res) {
       res.render('models.ejs', {
         models: data.models,
         user: authenticatedUser,
-        back_url: req.header('Referer')
+        back_url: req.header('Referer'),
+        message: ""
       })
     }
   });
@@ -38,14 +39,14 @@ exports.getAllModelsForUser = function(req, res) {
 exports.addModel = function(req, res) {
   var modelname = req.body.modelname;
   var modeldescription = req.body.modeldescription;
-  var user = req.user;
+  var authenticatedUser = req.user;
 
   var options = {
     method: 'POST',
     uri: config.app.baseurl + config.api.url + 'models/add',
     headers: {
       'Content-Type': config.api.contentType,
-      'Authorization': 'Bearer ' + user.token
+      'Authorization': 'Bearer ' + authenticatedUser.token
     },
     form: req.body
   };
@@ -53,9 +54,21 @@ exports.addModel = function(req, res) {
   request(options, function(error, response, body) {
     var data = JSON.parse(body);
     var model = data.model
+    console.log("data.status = " + "1".localeCompare(data.status));
+    console.log(data.status);
     if (error)
       throw error;
-    res.redirect('/models/' + model._id);
+    
+    if("0".localeCompare(data.status) === 0)
+      res.render('models.ejs', {
+        models: [],
+        user: authenticatedUser,
+        back_url: req.header('Referer'),
+        message: data.message
+      });
+    else
+      res.redirect('/models/' + data.model._id);
+    
   });
 };
 
@@ -563,7 +576,7 @@ exports.addStateToModel = function(req, res) {
       throw error;
 
     if (is_ajax_request) {
-      //res.json(body);
+      res.json(data);
     } else {
       res.redirect(config.routes.models + model_id);
     }
@@ -581,7 +594,7 @@ exports.deleteStateFromModel = function(req, res) {
 
   var options = {
     method: 'POST',
-    uri: config.app.baseurl + config.api.url + 'model/' + model_id + '/deletestate/' + state_id,
+    uri: config.app.baseurl + config.api.url + 'models/' + model_id + '/deletestate/' + state_id,
     headers: {
       'Content-Type': config.api.contentType,
       'Authorization': 'Bearer ' + user.token
@@ -594,7 +607,7 @@ exports.deleteStateFromModel = function(req, res) {
     if (error)
       throw error;
     if (is_ajax_request) {
-      res.json(body);
+      res.json(data);
     } else {
       res.redirect(config.routes.models + model_id);
     }

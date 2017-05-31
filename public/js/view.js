@@ -1,37 +1,40 @@
 modelApp.view = {
 
-  
+
   populateDatasourcesSelect: function(data) {
+
     var datasource_id = $('#datasource_select').data("model_datasource");
     $("#datasource_select option").remove();
 
-    if (data.status > 0) {
-      var yourDatasources = data.datasources;
-      var sharedDatasources = data.shared_datasources;
+    if (datasource_id === undefined) {
+      var option = '<option value="">No datasources defined</option>';
+      $("#datasource_select").append(option);
+    } else {
+      if (data.status > 0) {
+        var yourDatasources = data.datasources;
+        var sharedDatasources = data.shared_datasources;
 
-      $.each(yourDatasources, function(key, datasource) {
-        var selectString = "";
-        if (datasource_id.trim() === datasource._id.trim())
-          selectString = "select";
-        var option = '<option value="' + datasource._id + '" data-number_signals = "' + datasource.signals.length + '" data-datasource_id="' + datasource._id + '" ' + selectString + '>' + datasource.name + ' ('+datasource.signals.length+')</option>';
-        $("#datasource_select").append(option);
-      });
+        $.each(yourDatasources, function(key, datasource) {
+          var selectString = "";
+          if (datasource_id.trim() === datasource._id.trim())
+            selectString = "select";
+          var option = '<option value="' + datasource._id + '" data-number_signals = "' + datasource.signals.length + '" data-datasource_id="' + datasource._id + '" ' + selectString + '>' + datasource.name + ' (' + datasource.signals.length + ')</option>';
+          $("#datasource_select").append(option);
+        });
 
-      $.each(sharedDatasources, function(key, datasource) {
-        var selectString = "";
-        if (datasource_id.trim() === datasource._id.trim())
-          selectString = "select";
-        var option = '<option value="' + datasource._id + '" data-number_signals = "' + datasource.signals.length + '" data-datasource_id="' + datasource._id + '" ' + selectString + '>' + datasource.name + ' (Shared) </option>';
-        $("#datasource_select").append(option);
-      });
-
+        $.each(sharedDatasources, function(key, datasource) {
+          var selectString = "";
+          if (datasource_id.trim() === datasource._id.trim())
+            selectString = "select";
+          var option = '<option value="' + datasource._id + '" data-number_signals = "' + datasource.signals.length + '" data-datasource_id="' + datasource._id + '" ' + selectString + '>' + datasource.name + ' (Shared) </option>';
+          $("#datasource_select").append(option);
+        });
+      }
     }
-
   },
 
 
   populateSignalTable: function(data) {
-    console.log(data);
     $("#signals_table tr").remove();
     if (data.status > 0) {
       var signals = data.signals;
@@ -65,6 +68,7 @@ modelApp.view = {
 
 
   renderStates: function(data) {
+    console.log(data);
     $('#state_table').empty();
     if (data.status > 0) {
       var newRows = "";

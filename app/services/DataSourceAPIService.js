@@ -287,8 +287,14 @@ exports.getAllSignalsFromDataSource = function(req, res) {
 
 
 var constructSignal = function(form_data) {
-  var signal = null;
-  if (form_data.signal_type === "generated_signal") {
+  var signal = new Signal({});
+	signal.name = form_data.signal_name;
+  signal.description = form_data.signal_description;
+	
+	if (form_data.signal_type === "timestamp") {
+		signal.data_type = "Timestamp";
+	}
+  else if (form_data.signal_type === "generated_signal") {
 
     var linear_gradient = parseFloat(form_data.signal_linear_gradient);
     var linear_delay = parseInt(form_data.signal_linear_delay);
@@ -296,15 +302,10 @@ var constructSignal = function(form_data) {
     var periodic_mag = parseInt(form_data.signal_periodic_mag);
     var periodic_period = parseInt(form_data.signal_periodic_period);
 
-    signal = new Signal({
-      name: form_data.signal_name,
-      description: form_data.signal_description,
-      dt: form_data.signal_dt,
-      data_type: "RG",
-      linear_gradient: linear_gradient,
-      periodic_mag: form_data.signal_periodic_mag,
-      periodic_period: form_data.signal_periodic_period
-    });
+		signal.data_type = "RG";
+		signal.linear_gradient = linear_gradient;
+		signal.periodic_mag = form_data.signal_periodic_mag;
+		signal.periodic_period = form_data.signal_periodic_period;
 
     var today = moment();
     var date = moment(form_data.start_date);
@@ -336,23 +337,13 @@ var constructSignal = function(form_data) {
     signal.measurements = measurements;
     signal.data_count = measurements.length;
   } else if (form_data.signal_type === "general_signal") {
-    signal = new Signal({
-      name: form_data.signal_name,
-      description: form_data.signal_description,
-      dt: form_data.signal_dt,
-      data_type: "General"
-    });
+      signal.data_type = "General";
   } else if (form_data.signal_type === "sensor_signal") {
-    signal = new Signal({
-      name: form_data.signal_name,
-      description: form_data.signal_description,
-      dt: form_data.signal_dt,
-      data_type: "Sensor",
-      sensor_location: form_data.sensor_location,
-      sensor_type: form_data.sensor_type,
-      sensor_uri: form_data.sensor_uri,
-      sensor_data_type: form_data.sensor_data_type,
-    });
+      signal.data_type = "Sensor data",
+      signal.sensor_location = form_data.sensor_location;
+      signal.sensor_type = form_data.sensor_type;
+      signal.file_uri = form_data.file_uri;
+      signal.sensor_data_source = form_data.sensor_data_source;
   }
   return signal;
 }

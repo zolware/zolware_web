@@ -25,6 +25,14 @@
    <% include ./partials/navbar %>
 	 <div id="contentwrap">
 		<div class="container">
+			
+			<% if(message) { %>
+<div class="alert alert-warning">
+        <a href="#" class="close" data-dismiss="alert">&times;</a>
+        <strong>Warning!</strong> <%= message %>
+    </div>
+			<% } %>
+			
 			<div class="row">
 				<div class="col-md-12 margin-bottom-30">
 					<!-- BEGIN Portlet PORTLET-->

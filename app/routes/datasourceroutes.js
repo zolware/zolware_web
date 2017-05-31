@@ -26,6 +26,7 @@ module.exports = function(app, parseForm, csrfProtection) {
   app.get('/api/datasources/:datasource_id/shares', authenticationService.checkAuthToken, dataSourceAPIService.getAllShareTokensForDataSource);
   app.post('/api/datasources/:datasource_id/deleteshare/:share_id', authenticationService.checkAuthToken, dataSourceAPIService.deleteShareTokenFromDataSource);
   
+  app.post('/api/signals/:signal_id', authenticationService.checkAuthToken, signalAPIService.editSignal);
   
   
    app.get('/api/signals/:signal_id/getdata', authenticationService.checkAuthToken, signalAPIService.getDataFromSignal);

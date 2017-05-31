@@ -1,4 +1,5 @@
 var Component = require('../models/component').Component;
+var State = require('../models/state');
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
@@ -13,10 +14,14 @@ var ModelSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'DataSource'
   },
-  states : [{
-    //_id:false,
-    type: {type: String},
-    name: {type: String},
+//   states : [{
+//     //_id:false,
+//     type: {type: String},
+//     name: {type: String},
+//   }],
+  states: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'State'
   }],
   components: [{
     type: mongoose.Schema.Types.ObjectId,
@@ -39,7 +44,8 @@ var ModelSchema = new Schema({
 ModelSchema.pre('remove', function(next) {
     // 'this' is the client being removed. Provide callbacks here if you want
     // to be notified of the calls' result.
-    Component.remove({model_id: this._id}).exec();
+    Component.remove({model: this._id}).exec();
+    State.remove({model: this._id}).exec();
     next();
 });
 

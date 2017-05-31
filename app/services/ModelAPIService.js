@@ -1,5 +1,6 @@
 "use strict";
 
+var State = require('../models/state');
 var Model = require('../models/model');
 var DataSource = require('../models/data_source').DataSource;
 var Signal = require('../models/data_source').Signal;
@@ -102,11 +103,23 @@ exports.addModel = function(req, res) {
           "name": signal.name,
           "type": "from signal"
         });
+        var state = new State({
+          user: authenticatedUser,
+          model: newModel,
+          name: signal.name,
+          type: 'signal'
+        });
+
+        newModel.states.push(state);
+        state.save();
+
+
       });
-      newModel.states = states;
+      // newModel.states = states;
     }
 
     newModel.save(function(err, model) {
+      console.log(err);
       if (err)
         res.json({
           status: 0,
@@ -140,11 +153,16 @@ exports.getModelById = function(req, res) {
           status: 0,
           message: 'Model not found.'
         });
-      else
+      else {
+
+        if (model.datasource === null)
+          model.states = [];
+
         res.json({
           status: 1,
           model: model,
         });
+      }
     });
 }
 
@@ -159,19 +177,21 @@ exports.deleteModel = function(req, res) {
       message: "Could not find model with ID " + model_id
     });
   } else {
-    Model.find({
+    Model.findOne({
       _id: model_id
-    }).remove(function(err, model_id) {
-      if (err) {
-        res.json({
-          status: -2,
-          message: "Could not remove model with ID " + model_id
-        });
-      } else
-        res.json({
-          status: 1,
-          message: "Model removed with ID " + model_id
-        });
+    }, function(err, model) {
+      model.remove(function(err, model) {
+        if (err) {
+          res.json({
+            status: -2,
+            message: "Could not remove model with ID " + model_id
+          });
+        } else
+          res.json({
+            status: 1,
+            message: "Model removed with ID " + model_id
+          });
+      });
     })
   }
 }
@@ -330,7 +350,9 @@ exports.addPresetComponentsToModel = function(req, res) {
       'user': user
     }).populate('signals', '-measurements').exec(function(err_datasource, datasource) {
 
-      var numSignals = datasource.signals.length;
+      var numSignals = 0;
+      if (datasource !== null)
+        numSignals = datasource.signals.length;
       model.components = [];
 
       Component.findOne({
@@ -401,7 +423,7 @@ exports.deleteComponentFromModel = function(req, res) {
 exports.deleteAllComponentsFromModel = function(req, res) {
   var model_id = req.params.model_id;
   var user = req.user;
-  
+
   Model.findOne({
     '_id': model_id,
     'user': user
@@ -442,8 +464,8 @@ exports.changeDataSourceForModel = function(req, res) {
   var model_id = req.params.model_id;
   var datasource_id = req.params.datasource_id;
   var user = req.user;
-  
-  
+
+
 
   Model.findOne({
     '_id': model_id,
@@ -459,8 +481,8 @@ exports.changeDataSourceForModel = function(req, res) {
         '_id': datasource_id,
         'user': user
       }).populate('signals', '-measurements').exec(function(err_datasource, datasource) {
-        
-       
+
+
 
         if (!datasource || err_datasource) {
           res.json({
@@ -471,10 +493,19 @@ exports.changeDataSourceForModel = function(req, res) {
           model.datasource = mongoose.Types.ObjectId(datasource_id);
           var states = [];
           datasource.signals.forEach(function(signal) {
-            states.push({
-              "name": signal.name,
-              "type": "from signal"
-            });
+
+            //states.push({
+            //   "name": signal.name,
+            //   "type": "from signal"
+            //});
+
+            states.push(new State({
+              user: user,
+              model: model,
+              name: signal.name,
+              type: 'signal'
+            }));
+
           });
           model.states = states;
 
@@ -572,19 +603,17 @@ exports.getModelStates = function(req, res) {
   Model.findOne({
     '_id': model_id,
     'user': user
-  }).exec(function(err_model, model) {
+  }).select('states').populate('states').exec(function(err_model, model) {
     if (!model || err_model) {
       res.json({
         status: 0,
         message: 'Model (' + model_id + ') not found.'
       });
     } else {
-      model.save(function(err, model) {
-        res.json({
-          status: 1,
-          states: model.states
-        });
-      })
+      res.json({
+        status: 1,
+        states: model.states
+      });
     }
   });
 }
@@ -593,12 +622,16 @@ exports.getModelStates = function(req, res) {
 exports.addStateToModel = function(req, res) {
   var model_id = req.params.model_id;
   var state_name = req.body.state_name;
+  var state_type = req.body.state_type;
   var user = req.user;
+  
+  console.log("state_name = " + state_name);
+  console.log("state_type = " + state_type);
 
   Model.findOne({
     '_id': model_id,
     'user': user
-  }).exec(function(err_model, model) {
+  }).populate('states').exec(function(err_model, model) {
 
     if (!model || err_model) {
       res.json({
@@ -606,16 +639,26 @@ exports.addStateToModel = function(req, res) {
         message: 'Model (' + model_id + ') not found.'
       });
     } else {
-      model.states.push({
-        "name": state_name,
-        "type": "Hidden"
+      
+      var newState = State({
+        user: user,
+        model: model,
+        name: state_name,
+        type: state_type
       });
-      model.save(function(err, model) {
-        res.json({
-          status: 2,
-          states: model.states
-        });
-      })
+      
+     model.states.push(mongoose.Types.ObjectId(newState._id));
+      newState.save(function(err, state) {
+        model.save(function(err, models) {
+          res.json({
+            status: 1,
+            states: model.states
+          });
+          });
+        })
+        
+        
+
     }
   });
 }
@@ -630,7 +673,7 @@ exports.deleteStateFromModel = function(req, res) {
   Model.findOne({
     '_id': model_id,
     'user': user
-  }).exec(function(err_model, model) {
+  }).select('states').populate('states').exec(function(err_model, model) {
     if (!model || err_model) {
       res.json({
         status: 0,
@@ -642,10 +685,12 @@ exports.deleteStateFromModel = function(req, res) {
       });
 
       model.save(function(err, model) {
-        res.json({
+        State.findOne({'_id': state_id}).remove(function(err, state){
+          res.json({
           status: 1,
           states: model.states
         });
+      });
       })
     }
   });

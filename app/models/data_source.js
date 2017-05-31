@@ -13,6 +13,10 @@ var SignalSchema = new Schema({
     type: String,
     default: 'No description'
   },
+  index: {
+    type: Number,
+    default: ""
+  },
   sensor_location: {
     type: String,
     default: ""
@@ -25,7 +29,19 @@ var SignalSchema = new Schema({
     type: String,
     default: ""
   },
-  sensor_data_type: {
+  sensor_data_source: {
+    type: String,
+    default: ""
+  },
+  file_data_col_names: {
+    type: String,
+    default: "['date','data']"
+  },
+  file_read_lines: {
+    type: Number,
+    default: 0
+  },
+  file_uri: {
     type: String,
     default: ""
   },
@@ -38,9 +54,13 @@ var SignalSchema = new Schema({
     type: String,
     default: "RG"
   },
-  status: {
+  status_msg: {
     type: String,
-    default: "No data"
+    default: ""
+  },
+  status: {
+    type: Boolean,
+    default: true
   },
   dt: {
     type: Number,
@@ -104,11 +124,18 @@ var DataSourceSchema = new Schema({
     type: String,
     default: "test_signals"
   },
+  data_source: {
+    type: String,
+    default: ""
+  },
+  dt: {
+    type: Number,
+    default: 0
+  },
   numcols: {
     type: Number,
     default: 1
   },
-  //signals: [SignalSchema],
   signals: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Signal'

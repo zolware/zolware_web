@@ -243,3 +243,41 @@ exports.addDataToSignal = function(req, res) {
 
 
 }
+
+
+
+exports.editSignal = function(req, res) {
+  console.log("HERE");
+  var signal_id = req.params.signal_id;
+  var name = req.body.name;
+  var description = req.body.description;
+  var authenticatedUser = req.user;
+
+  if (signal_id === "")
+    res.json({
+      staus: -1,
+      message: "Could not find signal with ID " + signal_id
+    });
+
+  Signal.findOne({
+    _id: signal_id,
+    'user': authenticatedUser
+  }, function(err, signal) {
+    if (err) {
+      res.send(err);
+    }
+
+    signal.name = name;
+    signal.description = description;
+
+    signal.save(function(err, signal) {
+      if (err) {
+        res.send(err);
+      }
+      res.json(signal);
+    });
+
+  })
+
+
+}

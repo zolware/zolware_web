@@ -2,11 +2,14 @@
 
   <div class="form-group ">
     <label class="control-label " for="select">
-       Data source type:
+       Signal type:
       </label>
     <select class="select form-control" id="signal_type" name="signal_type">
+      <option value="timestamp">
+        Timestamp
+       </option>
        <option value="sensor_signal">
-        Sensor
+        Sensor data
        </option>
       <option value="general_signal">
         General
@@ -40,16 +43,7 @@
     </div>
   </div>
 
-  <div class="form-group row">
-    <!-- Signal timestep -->
-    <div class="col-md-4">
-      <label for="signal_dt" class="col-form-label">Timestep (min)</label>
-    </div>
-    <div class="col-md-8">
-      <input type="text" class="form-control" name="signal_dt" id="signal_dt" value="1440">
-    </div>
-  </div>
-
+ 
 
 
   <div id="generated_signal" style="display:none;">
@@ -121,11 +115,11 @@
   </div>
 
 
-  <div id="general_signal">
+  <div id="general_signal" style="display:none;">
 
   </div>
 
-  <div id="sensor_signal">
+  <div id="sensor_signal" style="display:none;">
 
     <div class="form-group row">
       <!-- Signal timestep -->
@@ -145,42 +139,6 @@
       </div>
       <div class="col-md-8">
         <input type="text" class="form-control" name="sensor_type" id="sensor_type" placeholder="Optional">
-      </div>
-    </div>
-
-
-    <div class="form-group ">
-      <label class="control-label " for="select">
-       Data type:
-      </label>
-      <select class="select form-control" id="sensor_data_type" name="sensor_data_type">
-       <option value="data_type_file" selected>
-        File
-       </option>
-      <option value="data_type_rest">
-        RESTFul endpoint
-       </option>
-      </select>
-    </div>
-    
-    <div class="form-group row" id="data_type_file">
-      <!-- Signal timestep -->
-      <div class="col-md-4">
-        <label for="sensor_uri" class="col-form-label">URI</label>
-      </div>
-      <div class="col-md-8">
-        <input type="text" class="form-control" name="sensor_uri" id="sensor_uri" placeholder="Optional">
-      </div>
-    </div>
-    
-    
-    <div class="form-group row" id="data_type_rest" style="display:none;">
-      <!-- Signal timestep -->
-      <div class="col-md-4">
-        <label for="sensor_rest" class="col-form-label">RESTFul endpoint</label>
-      </div>
-      <div class="col-md-8">
-        <input type="text" class="form-control" name="sensor_rest" id="sensor_rest" placeholder="Optional">
       </div>
     </div>
 

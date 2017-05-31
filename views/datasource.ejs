@@ -35,6 +35,7 @@
 								<p>
 									<%= datasource.description %>
 								</p>
+									<% include ./partials/datasource_settings %>
 								<a id="showAddSignalForm" href="" class="btn btn-sm btn-primary">
 									<i class="fa fa-plus fa-1x"></i> Signal
 								</a>
@@ -85,9 +86,9 @@
 												<thead>
 													<tr>
 														<th>Name</th>
-														<th class="hidden-xs hidden-sm">Details</th>
+														<th class="hidden-xs hidden-sm">Type</th>
 														<th class="hidden-xs hidden-sm">Description</th>
-														<th class="text-center">Action</th>
+														<th class="text-center"></th>
 													</tr>
 												</thead>
 												<% for(var i=0; i < datasource.signals.length; i++) { %>
@@ -98,12 +99,7 @@
 															</a>
 														</td>
 														<td class="hidden-xs hidden-sm">
-															<strong><%= datasource.signals[i].data_type %></strong> <br>
-															<% if(datasource.signals[i].data_count === 0) { %>
-																No data 
-															<% } else { %>
-																<%= datasource.signals[i].data_count %> data point(s)
-															<% } %>
+															<strong><%= datasource.signals[i].data_type %></strong>
 														</td>
 														<td class="hidden-xs hidden-sm">
 															<%= datasource.signals[i].description %>
@@ -113,9 +109,12 @@
 															<form method="POST" action="/datasources/<%=datasource._id %>/deletesignal/<%= datasource.signals[i]._id %>" accept-charset="UTF-8" style="display:inline">
     												<button class="btn btn-xs btn-danger" type="button" data-toggle="modal" data-target="#confirmDelete" data-title="Delete signal" 
 																		data-message="Are you sure you want to delete this signal?">
-        											<i class="glyphicon glyphicon-trash"></i> Delete
+        											Delete
     												</button>
 													</form>
+															<button class="btn btn-xs btn-info" type="button">Active</button>
+															<button class="btn btn-xs btn-info" type="button"><i class="fa fa-arrow-up fa-1x"></i> </button>
+															<button class="btn btn-xs btn-info" type="button"><i class="fa fa-arrow-down fa-1x"></i> </button>
 														</td>
 													</tr>
 												<% } %>

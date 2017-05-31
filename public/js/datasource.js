@@ -97,11 +97,11 @@ $(function() {
 
 
 $(function() {
-  $("#sensor_data_type").change(function(e) {
+  $("#sensor_data_source").change(function(e) {
     e.preventDefault();
 
-    $('#data_type_file').hide();
-    $('#data_type_rest').hide();
+    $('#data_source_file').hide();
+    $('#data_source_rest').hide();
     
     $('#' + $(this).val()).show();
 

@@ -58,11 +58,12 @@ exports.addDataSource = function(req, res) {
       'Content-Type': config.api.contentType,
       'Authorization': 'Bearer ' + user.token
     },
-    form: {
-      datasource_name: datasourceName,
-      datasource_description: datasourceDescription,
-      user: user
-    }
+    form:req.body,
+   // form: {
+   //   datasource_name: datasourceName,
+    //  datasource_description: datasourceDescription,
+    //  user: user
+    //}
   };
 
   request(options, function(error, response, body) {

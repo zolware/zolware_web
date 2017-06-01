@@ -10,12 +10,51 @@
           <input type="hidden" name="_csrf" value="<%= csrfToken %>">
           <div class="form-group">
             <label for="email">Name:</label>
-            <input type="text" class="form-control" id="datasource_name" name="datasource_name">
+            <input type="text" class="form-control" id="name" name="name" required>
           </div>
           <div class="form-group">
             <label for="pwd">Description:</label>
-            <input type="text" placeholder="optional" class="form-control" id="datasource_description" name="datasource_description">
+            <input type="text" placeholder="optional" class="form-control" id="description" name="description">
           </div>
+          
+          <div class="form-group">
+             <label for="pwd">dt</label>
+             <input type="number" placeholder="optional" class="form-control" id="dt" name="dt" data-error="Needs to be a number" required>
+          </div>
+
+          <div class="form-group ">
+            <label class="control-label " for="select">
+              Source:
+            </label>
+            <select class="select form-control" id="data_source" name="data_source">
+              <option value="data_source_file" select>
+                File
+              </option>
+              <option value="data_source_s3">
+                AWS S3
+              </option>
+            </select>
+          </div>
+          
+          
+          <div id="data_source_file">
+            <div class="form-group">
+              <label for="pwd">File URI:</label>
+              <input type="text" placeholder="optional" class="form-control" id="file_uri" name="file_uri">
+            </div>
+          </div>
+          
+          <div id="data_source_s3" style="display:none;">
+            <div class="form-group">
+              <label for="pwd">S3 bucket:</label>
+              <input type="text" placeholder="optional" class="form-control" id="s3_bucket" name="s3_bucket">
+            </div>
+             <div class="form-group">
+              <label for="pwd">S3 file:</label>
+              <input type="text" placeholder="optional" class="form-control" id="s3_file" name="s3_file">
+            </div>
+          </div>
+
           <button type="submit" class="btn btn-default">Submit</button>
         </form>
       </div>

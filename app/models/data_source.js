@@ -29,21 +29,9 @@ var SignalSchema = new Schema({
     type: String,
     default: ""
   },
-  sensor_data_source: {
-    type: String,
-    default: ""
-  },
-  file_data_col_names: {
-    type: String,
-    default: "['date','data']"
-  },
   file_read_lines: {
     type: Number,
     default: 0
-  },
-  file_uri: {
-    type: String,
-    default: ""
   },
   units: String,
   user: {
@@ -124,10 +112,6 @@ var DataSourceSchema = new Schema({
     type: String,
     default: "test_signals"
   },
-  data_source: {
-    type: String,
-    default: ""
-  },
   dt: {
     type: Number,
     default: 0
@@ -140,9 +124,29 @@ var DataSourceSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Signal'
   }],
-  fileUri: {
+  file_uri: {
     type: String,
     default: ""
+  },
+  s3_bucket: {
+    type: String,
+    default: ""
+  },
+  s3_file: {
+    type: String,
+    default: ""
+  },
+  data_source: {
+    type: String,
+    default: "data_source_file"
+  },
+  data_format: {
+    type: String,
+    default: "csv"
+  },
+  file_data_col_names: {
+    type: String,
+    default: "['date','data']"
   },
   createdAt: {
     type: Date,

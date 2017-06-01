@@ -35,7 +35,17 @@
 								<p>
 									<%= datasource.description %>
 								</p>
-									<% include ./partials/datasource_settings %>
+								<% if(datasource.data_source == "data_source_file") { %>
+										<% if(datasource.data_source == "data_source_file") { %>
+												<p>Source: file [<%= datasource.file_uri %>]</p>
+										<% } %>
+								<% } else  if(datasource.data_source == "data_source_s3") { %>
+										<p>Source: S3 [<%= datasource.s3_bucket %>:<%= datasource.s3_file %>]</p>
+								<% } %>
+								
+									<% //include ./partials/datasource_settings_form %>
+								
+								
 								<a id="showAddSignalForm" href="" class="btn btn-sm btn-primary">
 									<i class="fa fa-plus fa-1x"></i> Signal
 								</a>
@@ -131,7 +141,7 @@
 		<% include ./partials/delete_signal_modal %>
 		<% include ./partials/share_datasource_modal %>
 		<% include ./partials/commonjs %>
-		<script src="/components/moment/min/moment.min.js"></script>
+		<script src="/static/components/moment/min/moment.min.js"></script>
 		<script src="/static/js/datasource.js"></script>
 		<% include ./partials/delete_modal %>
   	<% include ./partials/footer %>

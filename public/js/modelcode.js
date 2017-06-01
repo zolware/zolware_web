@@ -12,7 +12,7 @@ modelApp.modelcode = {
 
 
   getSignalNamesFromDataSource: function(datasource_id2) {
-    var datasource_id = $('#datasource_select').data("model_datasource");
+    var datasource_id = $('#datasource_select').data("model_datasource").trim();
     $.ajax({
       type: 'GET',
       url: '/datasources/' + datasource_id + '/signals?depth=name,description',
@@ -25,56 +25,43 @@ modelApp.modelcode = {
   },
 
 
-  getModel: function() {
-    var model_id = $('body').data("model_id");
-    $.ajax({
-      type: 'GET',
-      url: '/models/' + model_id,
-      dataType: "json",
-      async: true,
-      success: modelApp.modelcode.dd
-    });
-  },
-
-
-  dd: function(data) {
-    modelApp.view.populateComponents(data.model, data.signals);
-  },
-
+ 
 
   testing: function() {
-    var model_id = $('body').data("model_id");
-    var datasource_id = $('#datasource_select').data("model_datasource");
+    var model_id = $('body').data("model_id").trim();
+    var datasource_id = $('#datasource_select').data("model_datasource").trim();
     
-    var a1 = $.ajax({
+    var getModel = $.ajax({
       type: 'GET',
       url: '/models/' + model_id,
       dataType: "json",
       async: true
     });
 
-
-    var a2 = $.ajax({
+    var getStates = $.ajax({
       type: 'GET',
       url: '/models/' + model_id + '/getstates',
       dataType: "json",
       async: true
     });
     
-    
-     var a3 = $.ajax({
+    var getSignalsFromDatasource = $.ajax({
       type: 'GET',
       url: '/datasources/' + datasource_id + '/signals?depth=name,description',
       dataType: "json",
       async: true
     });
 
-    $.when(a1, a2).done(function(r1, r2) {
+    $.when(getModel, getStates, getSignalsFromDatasource).done(function(getModel_results, getStates_results, r3) {
       // Each returned resolve has the following structure:
       // [data, textStatus, jqXHR]
       // e.g. To access returned data, access the array at index 0
-      console.log(r1[0]);
-      console.log(r2[0]);
+      //console.log("in testing");
+      //console.log(r1[0]);
+      //console.log(r2[0]);
+      //console.log(r3[0]);
+      modelApp.view.populateComponents(getModel_results[0].model, getModel_results[0].signals);
+      modelApp.view.renderStates(getStates_results[0])
     });
 
 

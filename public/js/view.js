@@ -4,12 +4,17 @@ modelApp.view = {
   populateDatasourcesSelect: function(data) {
 
     var datasource_id = $('#datasource_select').data("model_datasource");
+    
+    console.log(data.status);
+    
     $("#datasource_select option").remove();
 
     if (datasource_id === undefined) {
-      var option = '<option value="">No datasources defined</option>';
+      var option = '<option value="">No datasources</option>';
       $("#datasource_select").append(option);
-    } else {
+      datasource_id="";
+    } 
+    
       if (data.status > 0) {
         var yourDatasources = data.datasources;
         var sharedDatasources = data.shared_datasources;
@@ -30,7 +35,7 @@ modelApp.view = {
           $("#datasource_select").append(option);
         });
       }
-    }
+    
   },
 
 
@@ -89,7 +94,7 @@ modelApp.view = {
       $('#add_state_dropdown').hide();
       $('state_name').val("");
       modelApp.modelcode.loadComponents();
-      modelApp.modelcode.getModel();
+      //modelApp.modelcode.getModel();
     }
   },
 

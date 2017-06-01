@@ -210,43 +210,11 @@ exports.deleteDataSource = function(req, res) {
 
 
 
-exports.getAllDataSourcesForProject = function(req, res) {
-	var project_id = req.params.project_id
-	var authenticatedUser = req.user;
-
-	var criteria = {};
-	criteria = {
-		'project_id': project_id,
-	};
-
-	DataSource.find(criteria, function(err, datasources) {
-
-		if (err || !datasources.length) {
-			res.json({
-				status: 0,
-				datasources: [{
-					id: 0,
-					name: 'No datasources found for project'
-				}]
-			});
-		} else {
-			var returnedDataSources = datasources;
-			res.json({
-				status: 1,
-				datasources: returnedDataSources
-			});
-		}
-	});
-}
-
-
 
 exports.getAllSignalsFromDataSource = function(req, res) {
 	var datasource_id = req.params.datasource_id;
 	// Get the authenticated user
 	var authenticatedUser = req.user;
-
-
 
 	var depth = req.query.depth;
 	var populateSelector = "";
@@ -262,16 +230,18 @@ exports.getAllSignalsFromDataSource = function(req, res) {
 	};
 
 	DataSource.findOne(criteria).populate('signals', populateSelector).exec(function(err, datasource) {
-
+		console.log(err);
+	
 		if (err || !datasource) {
 
 			res.json({
 				status: 0,
-				message: "No signals defined",
+				err: err,
+				message: "No signals defineds",
 				signals: []
 			});
 		} else {
-			console.log(datasource.signals);
+			
 			var signals = datasource.signals;
 			res.json({
 				status: 1,

@@ -119,7 +119,6 @@ exports.addModel = function(req, res) {
     }
 
     newModel.save(function(err, model) {
-      console.log(err);
       if (err)
         res.json({
           status: 0,
@@ -465,8 +464,6 @@ exports.changeDataSourceForModel = function(req, res) {
   var datasource_id = req.params.datasource_id;
   var user = req.user;
 
-
-
   Model.findOne({
     '_id': model_id,
     'user': user
@@ -481,48 +478,52 @@ exports.changeDataSourceForModel = function(req, res) {
         '_id': datasource_id,
         'user': user
       }).populate('signals', '-measurements').exec(function(err_datasource, datasource) {
-
-
-
         if (!datasource || err_datasource) {
           res.json({
             status: 0,
             message: 'DataSource not found'
           });
         } else {
-          model.datasource = mongoose.Types.ObjectId(datasource_id);
-          var states = [];
-          datasource.signals.forEach(function(signal) {
 
-            //states.push({
-            //   "name": signal.name,
-            //   "type": "from signal"
-            //});
+          // Remove existing states for model
+          State.find({
+            "model": model_id,
+            "user": user
+          }).remove(function(err_states, states_to_remove) {
 
-            states.push(new State({
-              user: user,
-              model: model,
-              name: signal.name,
-              type: 'signal'
-            }));
+
+            model.datasource = mongoose.Types.ObjectId(datasource_id);
+            model.states = [];
+            datasource.signals.forEach(function(signal) {
+              var newState = new State({
+                user: user,
+                model: model,
+                name: signal.name,
+                type: signal.data_type
+              });
+              newState.save();
+              model.states.push(mongoose.Types.ObjectId(newState._id));
+            });
+
+            model.save(function(err, model) {
+              if (!model || err)
+                res.json({
+                  status: 0,
+                  message: 'model not saved'
+                });
+              else
+                res.json({
+                  status: 1,
+                  model: model,
+                  datasource: datasource
+                });
+            })
+
+
 
           });
-          model.states = states;
 
-          model.save(function(err, model) {
 
-            if (!model || err)
-              res.json({
-                status: 0,
-                message: 'model not saved'
-              });
-            else
-              res.json({
-                status: 1,
-                model: model,
-                datasource: datasource
-              });
-          })
         }
       })
     }
@@ -599,20 +600,20 @@ exports.updateDataForComponent = function(req, res) {
 exports.getModelStates = function(req, res) {
   var model_id = req.params.model_id;
   var user = req.user;
-
-  Model.findOne({
-    '_id': model_id,
-    'user': user
-  }).select('states').populate('states').exec(function(err_model, model) {
-    if (!model || err_model) {
+  State.find({
+    "model": model_id,
+    "user": user,
+    "type": "Sensor data"
+  }).exec(function(err_states, states) {
+    if (!states || err_states) {
       res.json({
         status: 0,
-        message: 'Model (' + model_id + ') not found.'
+        // message: 'Model (' + model_id + ') not found.'
       });
     } else {
       res.json({
         status: 1,
-        states: model.states
+        states: states
       });
     }
   });
@@ -624,9 +625,6 @@ exports.addStateToModel = function(req, res) {
   var state_name = req.body.state_name;
   var state_type = req.body.state_type;
   var user = req.user;
-  
-  console.log("state_name = " + state_name);
-  console.log("state_type = " + state_type);
 
   Model.findOne({
     '_id': model_id,
@@ -639,26 +637,23 @@ exports.addStateToModel = function(req, res) {
         message: 'Model (' + model_id + ') not found.'
       });
     } else {
-      
+
       var newState = State({
         user: user,
         model: model,
         name: state_name,
         type: state_type
       });
-      
-     model.states.push(mongoose.Types.ObjectId(newState._id));
+
+      model.states.push(mongoose.Types.ObjectId(newState._id));
       newState.save(function(err, state) {
         model.save(function(err, models) {
           res.json({
             status: 1,
             states: model.states
           });
-          });
-        })
-        
-        
-
+        });
+      })
     }
   });
 }
@@ -685,12 +680,14 @@ exports.deleteStateFromModel = function(req, res) {
       });
 
       model.save(function(err, model) {
-        State.findOne({'_id': state_id}).remove(function(err, state){
+        State.findOne({
+          '_id': state_id
+        }).remove(function(err, state) {
           res.json({
-          status: 1,
-          states: model.states
+            status: 1,
+            states: model.states
+          });
         });
-      });
       })
     }
   });

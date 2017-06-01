@@ -54,8 +54,6 @@ exports.addModel = function(req, res) {
   request(options, function(error, response, body) {
     var data = JSON.parse(body);
     var model = data.model
-    console.log("data.status = " + "1".localeCompare(data.status));
-    console.log(data.status);
     if (error)
       throw error;
     
@@ -543,7 +541,6 @@ exports.getModelStates = function(req, res) {
   };
 
   request(options, function(error, response, body) {
-    console.log(body);
     var data = JSON.parse(body);
     if (error)
       throw error;

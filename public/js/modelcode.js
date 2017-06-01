@@ -32,7 +32,7 @@ modelApp.modelcode = {
       url: '/models/' + model_id,
       dataType: "json",
       async: true,
-      success:  modelApp.modelcode.dd
+      success: modelApp.modelcode.dd
     });
   },
 
@@ -40,6 +40,46 @@ modelApp.modelcode = {
   dd: function(data) {
     modelApp.view.populateComponents(data.model, data.signals);
   },
+
+
+  testing: function() {
+    var model_id = $('body').data("model_id");
+    var datasource_id = $('#datasource_select').data("model_datasource");
+    
+    var a1 = $.ajax({
+      type: 'GET',
+      url: '/models/' + model_id,
+      dataType: "json",
+      async: true
+    });
+
+
+    var a2 = $.ajax({
+      type: 'GET',
+      url: '/models/' + model_id + '/getstates',
+      dataType: "json",
+      async: true
+    });
+    
+    
+     var a3 = $.ajax({
+      type: 'GET',
+      url: '/datasources/' + datasource_id + '/signals?depth=name,description',
+      dataType: "json",
+      async: true
+    });
+
+    $.when(a1, a2).done(function(r1, r2) {
+      // Each returned resolve has the following structure:
+      // [data, textStatus, jqXHR]
+      // e.g. To access returned data, access the array at index 0
+      console.log(r1[0]);
+      console.log(r2[0]);
+    });
+
+
+  },
+
 
 
   getStates: function() {
@@ -62,10 +102,10 @@ modelApp.modelcode = {
     zolwareModelApp.modelApp.Global.num_signals = num_signals;
     modelApp.modelcode.getStates();
   },
-  
-  
+
+
   getDataSourcesForUser: function() {
-   var model_id = $('body').data("model_id");
+    var model_id = $('body').data("model_id");
     $.ajax({
       type: 'GET',
       url: '/datasources',

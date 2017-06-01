@@ -246,6 +246,8 @@ exports.getAllSignalsFromDataSource = function(req, res) {
   var datasource_id = req.params.datasource_id;
   // Get the authenticated user
   var authenticatedUser = req.user;
+	
+	
 
   var depth = req.query.depth;
   var populateSelector = "";
@@ -270,6 +272,7 @@ exports.getAllSignalsFromDataSource = function(req, res) {
         signals: []
       });
     } else {
+			console.log(datasource.signals);
       var signals = datasource.signals;
       res.json({
         status: 1,

@@ -35,6 +35,7 @@ modelApp.view = {
 
 
   populateSignalTable: function(data) {
+        console.log(data);
     $("#signals_table tr").remove();
     if (data.status > 0) {
       var signals = data.signals;
@@ -68,7 +69,7 @@ modelApp.view = {
 
 
   renderStates: function(data) {
-    console.log(data);
+
     $('#state_table').empty();
     if (data.status > 0) {
       var newRows = "";

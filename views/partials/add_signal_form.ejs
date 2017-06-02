@@ -29,7 +29,7 @@
       <label for="signal_name" class="col-form-label">Name</label>
     </div>
     <div class="col-md-8">
-      <input type="text" class="form-control" name="signal_name" id="signal_name" value="signal">
+      <input type="text" class="form-control" name="signal_name" id="signal_name" value="datetime">
     </div>
   </div>
   
@@ -113,7 +113,18 @@
 
 
   </div>
-
+  
+  <div id="timestamp">
+    <div class="form-group row">
+      <div class="col-md-4">
+        <label for="datestamp_format" class="col-form-label">Format</label>
+      </div>
+      <div class="col-md-8">
+        <input type="text" class="form-control" name="datestamp_format" id="datestamp_format" value="yyyy-mm-dd hh:mm:ss">
+      </div>
+    </div>
+  </div>
+   
 
   <div id="general_signal" style="display:none;">
 

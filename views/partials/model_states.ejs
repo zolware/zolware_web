@@ -1,32 +1,8 @@
 <div class="form-group">
-	
-		<% if(model.states.length > 0) { %>
-			<table class="table table-striped custab" id="state_table">
-				<thead>
-					<tr>
-						<th>State</th>
-						<th>Type</th>
-						<th class="text-center"></th>
-					</tr>
-				</thead>
-				<% for(var st=0; st < model.states.length; st++) { %>
-					<tr>
-						<td>
-							<%= model.states[st].name %>
-						</td>
-						<td>
-							<%= model.states[st].type %>
-						</td>
-						<td>
-							<% if(model.states[st].type !== "signal") { %>
-								<a id="remove_state" href="" class="btn btn-xs btn-primary" data-state-id="<%= model.states[st]._id %>">Remove</a>
-							<% } %>
-						</td>
-					</tr>
-					<% } %>
-			</table>
-			<% } %>
-		
+	<table class="table table-striped custab" id="state_table">
+	</table>
+	Timestamp signals are not shown.
+	<hr>
 	<a id="add_state_toggle_button" href="" class="btn btn-sm btn-primary">Add state</a>
 </div>
 
@@ -39,6 +15,7 @@
        State name
       </label>
 			<input class="form-control" id="state_name" name="state_name" type="text" />
+			<input class="form-control" id="state_type" name="state_type" type="hidden" value="hidden"/>
 		</div>
 		<div class="form-group">
 			<div>
@@ -46,4 +23,5 @@
 			</div>
 		</div>
 		</form>
+	
 </div>

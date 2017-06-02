@@ -10,7 +10,7 @@ modelApp.handlers = {
 			url: '/models/' + model_id + '/addpresetcomponents?preset_type=full',
 			dataType: "json",
 			async: true,
-			success: modelApp.modelcode.success
+			success: modelApp.modelcode.testing(null)
 		});
 	},
 
@@ -82,8 +82,7 @@ modelApp.handlers = {
 		var datasource_id = $(this).find(':selected').data('datasource_id');
 		var model_id = $('body').data("model_id");
 		modelApp.modelcode.saveModelDataSource(model_id, datasource_id);
-		modelApp.modelcode.getSignalNamesFromDataSource(datasource_id);
-		modelApp.modelcode.getModel();
+		modelApp.modelcode.reloadAll(datasource_id);
 	},
 
 
@@ -118,7 +117,7 @@ modelApp.handlers = {
 
 	toggleAddState: function(e) {
 		e.preventDefault();
-		$('#add_state_dropdown').show();
+		$('#add_state_dropdown').toggle();
 	},
 
 

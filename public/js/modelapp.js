@@ -14,13 +14,9 @@ var modelApp = modelApp || {};
 
 
     init: function() {
-      //modelApp.modelcode.getModel();
-      modelApp.modelcode.testing();
-     // modelApp.modelcode.getStates();
+      modelApp.modelcode.reloadAll(null);
       zolwareModelApp.modelApp.attachHandlers();
       modelApp.modelcode.getDataSourcesForUser();
-      modelApp.modelcode.getSignalNamesFromDataSource(34);
-      
     },
 
 

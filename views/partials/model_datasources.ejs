@@ -1,72 +1,12 @@
 <fieldset>
 
 	<div class="form-group">
-		<select id="datasource" name="datasource" class="form-control">
-			<% if(model.datasource == undefined) { %>
-				<option value="0" 
-												data-number_signals = "-1" 
-												data-datasource_id="-1"  
-												selected>
-					No dataset set
-				</option>
-			<% } %>
-				<% if(datasources) { %>
-					<% if(datasources.length > 0) { %>
-						<% for(var ds=0; ds < datasources.length; ds++) { %>
-							<% if(datasources[ds].signals.length > 0) { %>
-								<option value="	<%= datasources[ds]._id %> " 
-												data-number_signals = "<%= datasources[ds].signals.length %>" 
-												data-datasource_id="<%= datasources[ds]._id %>"  
-												data-datasource_index="<%= ds %>"  
-												<% if(model.datasource != null && model.datasource._id == datasources[ds]._id) { %> 
-													selected 
-												<% } %> 
-												>	<%= datasources[ds].name %> - <%= datasources[ds].signals.length %> signal(s)
-								</option>
-							<% } %>
-						<% } %>
-					<% } %>
-				<% } %>
-			
-			
-			<% if(shared_datasources) { %>
-			<option value="0">
-					-- Shared datasources --
-				</option>
-
-			
-			
-			<% for(var sds=0; sds < shared_datasources.length; sds++) { %>
-							<% if(shared_datasources[sds].datasource.signals.length > 0) { %>
-								<option value="	<%= shared_datasources[sds].datasource._id %> " 
-												data-number_signals = "<%= shared_datasources[sds].datasource.signals.length %>" 
-												data-datasource_id="<%= shared_datasources[sds].datasource._id %>"  
-												data-datasource_index="<%= sds %>"  
-												<% if(model.datasource != null && model.datasource._id == shared_datasources[sds].datasource._id) { %> 
-													selected 
-												<% } %> 
-												>	<%= shared_datasources[sds].datasource.name %> - <%= shared_datasources[sds].datasource.signals.length %> signal(s)
-								</option>
-							<% } %>
-						<% } %>
-			
-						<% } %>
-			
+		<select id="datasource_select" name="datasource" class="form-control" <% if(model.datasource != undefined) { %> data-model_datasource="<%= model.datasource._id %> <% } %>" >
 		</select>
 	</div>
 </fieldset>
 
 <div class="form-group">
-	<% if(signals) { %>
-		<% if(signals.length > 0) { %>
 			<table class="table table-striped custab" id="signals_table">
-				<% for(var sig=0; sig < signals.length; sig++) { %>
-					<tr>
-						<td><%= signals[sig].name %></td>
-						<td><%= signals[sig].description %></td>
-					</tr>
-					<% } %>
 			</table>
-		<% } %>
-	<% } %>
 </div>

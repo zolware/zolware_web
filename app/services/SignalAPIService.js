@@ -1,5 +1,5 @@
 var DataSource = require('../models/data_source').DataSource;
-var Signal = require('../models/data_source').Signal;
+var Signal = require('../models/signal');
 
 var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');

@@ -12,28 +12,46 @@ modelApp.modelcode = {
 
 
   getSignalNamesFromDataSource: function(datasource_id2) {
-    var datasource_id = $('#datasource_select').data("model_datasource").trim();
-    $.ajax({
-      type: 'GET',
-      url: '/datasources/' + datasource_id + '/signals?depth=name,description',
-      dataType: "json",
-      async: true,
-      success: function(data) {
-        modelApp.view.populateSignalTable(data)
-      }
-    });
+    
+    var datasource_id = $('#datasource_select').data("model_datasource");
+    if(datasource_id !== undefined) {
+      $.ajax({
+        type: 'GET',
+        url: '/datasources/' + datasource_id.trim() + '/signals?depth=name,description',
+        dataType: "json",
+        async: true,
+        success: function(data) {
+          modelApp.view.populateSignalTable(data)
+        }
+      });
+    }
   },
 
 
  
 
-  testing: function() {
+  reloadAll: function(datasource_id_in) {
+    $('#states_title').html(" States (loading...)");
+    $('#signals_title').html(" Signals (loading...)");
+    var datasource_id = "";
+    if(datasource_id_in === null)
+      datasource_id = $('#datasource_select').data("model_datasource").trim();
+    else
+      datasource_id = datasource_id_in
+    
     var model_id = $('body').data("model_id").trim();
-    var datasource_id = $('#datasource_select').data("model_datasource").trim();
     
     var getModel = $.ajax({
       type: 'GET',
       url: '/models/' + model_id,
+      dataType: "json",
+      async: true
+    });
+    
+    
+    var loadComponents = $.ajax({
+      type: 'GET',
+      url: '/models/' + model_id + '/components',
       dataType: "json",
       async: true
     });
@@ -52,16 +70,20 @@ modelApp.modelcode = {
       async: true
     });
 
-    $.when(getModel, getStates, getSignalsFromDatasource).done(function(getModel_results, getStates_results, r3) {
+    $.when(getModel, getStates, getSignalsFromDatasource, loadComponents).done(function(getModel_results, getStates_results, getSignals_results, loadComponents_results) {
       // Each returned resolve has the following structure:
       // [data, textStatus, jqXHR]
       // e.g. To access returned data, access the array at index 0
-      //console.log("in testing");
-      //console.log(r1[0]);
-      //console.log(r2[0]);
-      //console.log(r3[0]);
-      modelApp.view.populateComponents(getModel_results[0].model, getModel_results[0].signals);
+      console.log(getModel_results[0]);
+      console.log(getStates_results[0]);
+      console.log(getSignals_results[0]);
+      console.log(loadComponents_results[0]);
+      modelApp.view.populateSignalTable(getSignals_results[0])
+      modelApp.view.populateComponents(getModel_results[0].model, getSignals_results[0].signals);
       modelApp.view.renderStates(getStates_results[0])
+      modelApp.view.populateComponentTable(loadComponents_results[0]);
+      $('#states_title').html(" States (" + getStates_results[0].states.length + ")");
+      $('#signals_title').html(" Signals (" + getSignals_results[0].signals.length + ")");
     });
 
 

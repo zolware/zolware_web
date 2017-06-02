@@ -8,7 +8,7 @@ var datalib = require('../lib/datalib.js');
 
 var DataSource = require('../models/data_source').DataSource;
 var Project = require('../models/project');
-var Signal = require('../models/data_source').Signal;
+var Signal = require('../models/signal');
 var Model = require('../models/model');
 var ShareToken = require('../models/datashare_token');
 var signalAPIService = require('../services/SignalAPIService');
@@ -85,17 +85,17 @@ exports.addDataSource = function(req, res) {
 				message: 'Datasource not saved'
 			});
 		else
-		res.json({
-			status: 1,
-			message: 'Datasource saved successfully',
-			links: {
-				href: '/datasources/' + newDataSource._id
-			},
-			datasource: {
-				name: newDataSource.name,
-				description: newDataSource.description,
-			}
-		});
+			res.json({
+				status: 1,
+				message: 'Datasource saved successfully',
+				links: {
+					href: '/datasources/' + newDataSource._id
+				},
+				datasource: {
+					name: newDataSource.name,
+					description: newDataSource.description,
+				}
+			});
 	});
 };
 
@@ -177,34 +177,17 @@ exports.deleteDataSource = function(req, res) {
 	DataSource.findOne({
 		_id: datasource_id,
 		'user': authenticatedUser
-	}).remove(function(err, datasource) {
+	}, function(err, datasource) {
 		if (err) {
 			res.send(err);
+		} else {
+			datasource.remove();
+			res.json({
+				status:0,
+				message: "Datasource " + datasource._id + " successfully removed."
+			});
 		}
-
-
-		Project.findOne({
-				'datasources.oid': datasource_id
-			}, {
-				'datasources.$': 1
-			},
-			function(err, project) {
-
-				if (project) {
-
-				} else {
-
-				}
-			}
-		)
-
-		res.json(datasource);
-
 	})
-
-
-
-
 }
 
 
@@ -231,7 +214,7 @@ exports.getAllSignalsFromDataSource = function(req, res) {
 
 	DataSource.findOne(criteria).populate('signals', populateSelector).exec(function(err, datasource) {
 		console.log(err);
-	
+
 		if (err || !datasource) {
 
 			res.json({
@@ -241,7 +224,7 @@ exports.getAllSignalsFromDataSource = function(req, res) {
 				signals: []
 			});
 		} else {
-			
+
 			var signals = datasource.signals;
 			res.json({
 				status: 1,
@@ -321,6 +304,7 @@ var constructSignal = function(form_data) {
 
 
 
+
 exports.addSignalToDataSource = function(req, res) {
 	var datasource_id = req.params.datasource_id
 	var user = req.user;
@@ -331,18 +315,16 @@ exports.addSignalToDataSource = function(req, res) {
 	};
 
 	DataSource.findOne(criteria).exec(function(err_find, datasource) {
-
 		if (err_find) {
-
 			res.json({
 				status: 0,
 				message: "No signals defined"
 			});
 		} else {
-
 			//Validate and sanitize
 			var signal = constructSignal(req.body);
 			signal.user = user;
+			signal.datasource = datasource;
 
 			signal.save(function(err_signal) {
 				datasource.signals.push(signal);
@@ -360,6 +342,7 @@ exports.addSignalToDataSource = function(req, res) {
 		}
 	});
 }
+
 
 
 
@@ -386,28 +369,23 @@ exports.deleteSignalFromDataSource = function(req, res) {
 			datasource.signals.pull(mongoose.Types.ObjectId(signal_id));
 			datasource.save(function(err_save) {
 
-				Signal.findOne({
-					'_id': signal_id
-				}).remove(function(err_remove, signal) {
-
+				Signal.findOne({'_id': signal_id}).remove(function(err_remove, signal) {
 					//Find model and re-do the states
-					Model.find({
-						'datasource': datasource_id,
-						'user': authenticatedUser,
-					}).exec(function(err_models, models) {
+			//		Model.find({
+			//			'datasource': datasource_id,
+		//				'user': authenticatedUser,
+		//			}).exec(function(err_models, models) {
 
-						models.forEach(function(model) {
-							model.states = [];
-							datasource.signals.forEach(function(signal) {
-								model.states.push({
-									"name": signal.name,
-									"type": "from signal"
-								});
-							});
+// 						models.forEach(function(model) {
+// 							model.states = [];
+// 							datasource.signals.forEach(function(signal) {
+// 								model.states.push({
+// 									"name": signal.name,
+// 									"type": "from signal"
+// 								});
+// 							});
 
-						});
-
-
+// 						});
 
 						if (!err_save) {
 							res.json({
@@ -416,8 +394,7 @@ exports.deleteSignalFromDataSource = function(req, res) {
 							});
 						}
 
-
-					});
+					//});
 
 
 				});

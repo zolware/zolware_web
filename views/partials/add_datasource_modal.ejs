@@ -6,7 +6,7 @@
         <h4 class="modal-title">Create new datasource</h4>
       </div>
       <div class="modal-body">
-        <form role="form" action="/datasources/add" method="post">
+        <form id="add_datasource_form" role="form" action="/datasources/add" method="post">
           <input type="hidden" name="_csrf" value="<%= csrfToken %>">
           <div class="form-group">
             <label for="email">Name:</label>
@@ -40,7 +40,9 @@
           <div id="data_source_file">
             <div class="form-group">
               <label for="pwd">File URI:</label>
-              <input type="text" placeholder="optional" class="form-control" id="file_uri" name="file_uri">
+              <input type="text" placeholder="optional" class="form-control" id="file_uri" name="file_uri" 
+                     pattern="(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9]\.[^\s]{2,})"
+                     title="URI should be a valid URL">
             </div>
           </div>
           
@@ -64,3 +66,4 @@
     </div>
   </div>
 </div>
+

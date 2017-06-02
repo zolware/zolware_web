@@ -46,6 +46,7 @@ ModelSchema.pre('remove', function(next) {
     // to be notified of the calls' result.
     Component.remove({model: this._id}).exec();
     State.remove({model: this._id}).exec();
+    Signal.remove({model: this._id}).exec();
     next();
 });
 

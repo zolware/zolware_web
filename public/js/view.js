@@ -9,8 +9,8 @@ modelApp.view = {
     
     $("#datasource_select option").remove();
 
-    if (datasource_id === undefined) {
-      var option = '<option value="">No datasources</option>';
+    if (datasource_id === undefined || datasource_id === null) {
+      var option = '<option value="">No datasource set</option>';
       $("#datasource_select").append(option);
       datasource_id="";
     } 
@@ -40,11 +40,9 @@ modelApp.view = {
 
 
   populateSignalTable: function(data) {
-        console.log(data);
     $("#signals_table tr").remove();
     if (data.status > 0) {
       var signals = data.signals;
-      $('#signals_title').html(" Signals (" + signals.length + ")");
       $.each(signals, function(key, signal) {
         var tableRow = '<tr><td>' + signal.name + '</td>' +
           '<td>' + signal.description + '</td>' +
@@ -57,6 +55,7 @@ modelApp.view = {
 
 
   populateComponentTable: function(data) {
+    console.log(data);
     $("#components_table tr").remove();
     if (data.status > 0) {
       var components = data.components;
@@ -90,17 +89,16 @@ modelApp.view = {
       }
 
       zolwareModelApp.modelApp.Global.num_states = num_states;
-      $('#states_title').html(" States (" + num_states + ")");
       $('#add_state_dropdown').hide();
       $('state_name').val("");
       modelApp.modelcode.loadComponents();
-      //modelApp.modelcode.getModel();
     }
   },
 
 
   populateComponents: function(data, signals) {
-
+console.log(data);
+    console.log(signals);
     var num_components = data.components.length;
     for (i = 0; i < num_components; i++) {
       var html = "";

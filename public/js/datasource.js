@@ -83,13 +83,17 @@ $(function() {
     var datasource_id = selected.data('datasource_id');
     var component_id = $(this).data("component_id");
 
-    if ($(this).val() === "") {
-
+    if ($(this).val() === "sensor_signal") {
+      $("input[name='signal_name']").val('signal_name');
+    }
+    else if ($(this).val() === "timestamp") {
+      $("input[name='signal_name']").val('datetime');
     }
 
     $('#generated_signal').hide();
     $('#general_signal').hide();
     $('#sensor_signal').hide();
+    $('#timestamp').hide();
     $('#' + $(this).val()).show();
 
   });

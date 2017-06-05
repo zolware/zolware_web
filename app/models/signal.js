@@ -1,5 +1,5 @@
 var mongoose = require('mongoose'),
-    extend = require('mongoose-schema-extend');
+  extend = require('mongoose-schema-extend');
 var Schema = mongoose.Schema;
 
 
@@ -57,7 +57,7 @@ var SignalSchema = new Schema({
     type: String,
     default: "yyy-mm-dd hh:mm:ss"
   },
-   linear_delay: {
+  linear_delay: {
     type: Number,
     default: 0
   },
@@ -81,20 +81,45 @@ var SignalSchema = new Schema({
     type: Date,
     default: new Date(1990, 0, 1)
   },
-  measurements : [{
-      _id:false,
-      datetime : Date,
-      value : [{type: Number}]
+  measurements: [{
+    _id: false,
+    datetime: Date,
+    value: [{
+      type: Number
+    }]
   }],
   Yrange: {
-    min: {type: Number, default: 0},
-    max: {type: Number, default: 0}
+    min: {
+      type: Number,
+      default: 0
+    },
+    max: {
+      type: Number,
+      default: 0
+    }
   },
   Xrange: {
-    min: {type: Date, default: new Date(1900, 0, 1)},
-    max: {type: Date, default: new Date(1900, 0, 1)}
+    min: {
+      type: Date,
+      default: new Date(1900, 0, 1)
+    },
+    max: {
+      type: Date,
+      default: new Date(1900, 0, 1)
+    }
   },
-  data_count : {type: Number, default: 0}
- });
+  data_count: {
+    type: Number,
+    default: 0
+  }
+});
+
+SignalSchema.post('save', function(doc) {
+  //Add an index for sorting signals and finding in the correct order
+   mongoose.model('Signal').count({datasource:doc.datasource}, function(err, c) {
+     doc.index = c;
+     doc.save();
+   });
+});
 
 module.exports = mongoose.model('Signal', SignalSchema)

@@ -212,7 +212,9 @@ exports.getAllSignalsFromDataSource = function(req, res) {
 		'user': authenticatedUser,
 	};
 
-	DataSource.findOne(criteria).populate('signals', populateSelector).exec(function(err, datasource) {
+	DataSource.findOne(criteria)
+		.sort('-index')
+		.populate('signals', populateSelector).exec(function(err, datasource) {
 		console.log(err);
 
 		if (err || !datasource) {

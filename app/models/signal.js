@@ -84,9 +84,7 @@ var SignalSchema = new Schema({
   measurements: [{
     _id: false,
     datetime: Date,
-    value: [{
-      type: Number
-    }]
+    value: {type: Number}
   }],
   Yrange: {
     min: {

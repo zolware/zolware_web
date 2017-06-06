@@ -1,5 +1,5 @@
 var mongoose = require('mongoose'),
-    extend = require('mongoose-schema-extend');
+  extend = require('mongoose-schema-extend');
 var Schema = mongoose.Schema;
 
 var Signal = require('./signal');
@@ -28,6 +28,11 @@ var DataSourceSchema = new Schema({
     type: Number,
     default: 0
   },
+ measurements: [{
+    _id: false,
+    datetime: Date,
+    values: [{type: Number}]
+  }],
   numcols: {
     type: Number,
     default: 1
@@ -72,6 +77,10 @@ var DataSourceSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  data_count: {
+    type: Number,
+    default: 0
+  }
 }, {
   collection: 'data_sources',
   discriminatorKey: '_type'
@@ -79,8 +88,10 @@ var DataSourceSchema = new Schema({
 
 
 DataSourceSchema.pre('remove', function(next) {
-    Signal.remove({datasource: this._id}).exec();
-    next();
+  Signal.remove({
+    datasource: this._id
+  }).exec();
+  next();
 });
 
 

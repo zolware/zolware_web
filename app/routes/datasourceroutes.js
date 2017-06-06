@@ -35,6 +35,8 @@ module.exports = function(app, parseForm, csrfProtection) {
   app.get('/api/datasources/:datasource_id/signals/:signal_id/getdata', authenticationService.checkAuthToken, signalAPIService.getDataFromDataSource);
   app.get('/api/datasources/:datasource_id/getdata', authenticationService.checkAuthToken, signalAPIService.getDataFromDataSource);
   
+  app.post('/api/datasources/:datasource_id/add_measurements', authenticationService.checkAuthToken, dataSourceAPIService.addMeasurementDataToDatasource);
+  
   
   // projects
   app.get('/datasources', csrfProtection, authenticationService.isLoggedIn, dataSourceService.getAllDataSourcesForUser);

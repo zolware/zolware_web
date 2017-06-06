@@ -40,14 +40,16 @@
 								</p>
 								<% if(datasource.data_source == "data_source_file") { %>
 										<% if(datasource.data_source == "data_source_file") { %>
-												<p>Source: file [<%= datasource.file_uri %>]</p>
+												<h6>Source: file [<%= datasource.file_uri %>]</h6>
 										<% } %>
 								<% } else  if(datasource.data_source == "data_source_s3") { %>
-										<p>Source: S3 [<%= datasource.s3_bucket %>:<%= datasource.s3_file %>]</p>
+										<h6>Source: S3 [<%= datasource.s3_bucket %>:<%= datasource.s3_file %>]</h6>
 								<% } %>
 								
 									<% //include ./partials/datasource_settings_form %>
-								
+								<h6>
+									Data: <%= datasource.data_count %> data point(s)
+								</h6>
 								
 								<a id="showAddSignalForm" href="" class="btn btn-sm btn-primary">
 									<i class="fa fa-plus fa-1x"></i> Signal

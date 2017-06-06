@@ -30,9 +30,33 @@ var DataSourceSchema = new Schema({
   },
  measurements: [{
     _id: false,
-    datetime: Date,
+    datetime: {type: Date}, 
     values: [{type: Number}]
   }],
+   Yrange: {
+    min: {
+      type: String,
+      default: ""
+    },
+    max: {
+      type: String,
+      default: ""
+    }
+  },
+  Xrange: {
+    min: {
+      type: Date,
+      default: new Date(1900, 0, 1)
+    },
+    max: {
+      type: Date,
+      default: new Date(1900, 0, 1)
+    }
+  },
+  last_data: {
+    type: Date,
+    default: new Date(1990, 0, 1)
+  },
   numcols: {
     type: Number,
     default: 1

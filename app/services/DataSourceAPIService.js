@@ -525,17 +525,30 @@ exports.deleteShareTokenFromDataSource = function(req, res) {
 	});
 }
 
+
+
+
 exports.processNewMeasurements = function(datasource, measurements) {
   
   var newMeasurements = measurements;
   var measurementsArray = [];
   var datesArray = [];
+	var data_counter = 0;
   newMeasurements.forEach(function(value) {
     var newDate = value.datetime;
-    datesArray.push(moment(newDate));
-    var newValue = value.value;
-    measurementsArray.push(newValue);
+		var isafter = moment(newDate).isAfter(moment(datasource.last_data));
+		if(isafter === true) {
+			datesArray.push(moment(newDate));
+    	var newValue = value.values;
+    	measurementsArray.push(newValue);
+			datasource.measurements.push({"datetime": moment(newDate), "values": newValue});
+			data_counter++;
+			datasource.last_data = moment(newDate);
+		}
+		data_counter++;
   });
+	
+	datasource.data_count = data_counter;
 
   var maxDateNew = moment.max(datesArray)
   var maxValueNew = Math.max.apply(Math, measurementsArray);
@@ -543,40 +556,43 @@ exports.processNewMeasurements = function(datasource, measurements) {
   var minValueNew = Math.min.apply(Math, measurementsArray);
 
   // Not the first data
-  if (signal.data_count > 0) {
-    var tempXMax = moment(signal.Xrange.max);
-    var tempXMin = moment(signal.Xrange.min);
+  if (datasource.data_count > 0) {
+    var tempXMax = moment(datasource.Xrange.max);
+    var tempXMin = moment(datasource.Xrange.min);
 
-    signal.Xrange = {
+    datasource.Xrange = {
       max: moment.max(maxDateNew, moment(tempXMax)).format("YYYY-MM-DD hh:mm:ss"),
       min: moment.min(minDateNew, moment(tempXMin)).format("YYYY-MM-DD hh:mm:ss")
     };
 
-    var tempYMax = signal.Yrange.max;
-    var tempYMin = signal.Yrange.min;
-    signal.Yrange = {
-      max: Math.max(tempYMax, maxValueNew),
-      min: Math.min(tempYMin, minValueNew)
-    };
+    var tempYMax = datasource.Yrange.max.split(",");
+    var tempYMin = datasource.Yrange.min.split(",");
+//     signal.Yrange = {
+//       max: Math.max(tempYMax, maxValueNew),
+//       min: Math.min(tempYMin, minValueNew)
+//     };
   } else {
-    signal.Xrange = {
-      max: maxDateNew.format("YYYY-MM-DD hh:mm:ss"),
-      min: minDateNew.format("YYYY-MM-DD hh:mm:ss")
-    };
-    signal.Yrange = {
-      max: maxValueNew,
-      min: minValueNew
-    };
+//     signal.Xrange = {
+//       max: maxDateNew.format("YYYY-MM-DD hh:mm:ss"),
+//       min: minDateNew.format("YYYY-MM-DD hh:mm:ss")
+//     };
+//     signal.Yrange = {
+//       max: maxValueNew,
+//       min: minValueNew
+//     };
   }
-  return signal;
+  return datasource;
 }
+
+
+
 
 exports.addMeasurementDataToDatasource = function(req, res) {
 	var datasource_id = req.params.datasource_id
   var jsonData = req.body;
   var user = req.user;
 	
-	console.log(jsonData);
+	
 
   var criteria = {};
   criteria = {
@@ -584,22 +600,10 @@ exports.addMeasurementDataToDatasource = function(req, res) {
     'user': user,
   };
 
-  DataSource.findOneAndUpdate(
-    criteria, {
-      $push: {
-        "measurements": {
-          $each: jsonData
-        }
-      },
-      $inc: {
-        data_count: jsonData.length
-      }
-    }, {
-      safe: true,
-      upsert: false
-    }
-  ).exec(function(err, signal) {
-    if (err || !signal) {
+  DataSource.findOne(
+    criteria
+  ).exec(function(err, datasource) {
+    if (err || !datasource) {
       console.log(err);
       res.json({
         status: 0,
@@ -607,14 +611,14 @@ exports.addMeasurementDataToDatasource = function(req, res) {
       });
     } else {
 
-      //signal = exports.processNewMeasurements(signal, jsonData);
-
-     // signal.save(function(err_signall) {
-      //  res.json({
-      //    status: 1,
-     //     data: jsonData
-     //   });
-    //  })
+      datasource = exports.processNewMeasurements(datasource, jsonData);
+      datasource.save(function(err_datasource) {
+        res.json({
+          status: 1,
+          data: jsonData
+        });
+     })
+		
     }
   });
 }
